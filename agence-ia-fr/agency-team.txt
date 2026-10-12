@@ -1,0 +1,34 @@
+# Agents agency-agents utilisés par l'agence (un identifiant par ligne).
+# Identifiants vérifiés avec ./scripts/install.sh --list agents (octobre 2026).
+# Chacun a une version française dans agents/ (même nom + suffixe -fr).
+
+# Vente
+discovery-coach
+outbound-strategist
+proposal-strategist
+offer-lead-gen-strategist
+sales-engineer
+pricing-analyst
+
+# Acquisition (marketing)
+linkedin-content-creator
+seo-specialist
+email-marketing-strategist
+
+# Production (conception et livraison)
+ai-engineer
+multi-agent-systems-architect
+mcp-builder
+workflow-architect
+rag-pipeline-engineer
+voice-ai-integration-engineer
+prompt-engineer
+project-shepherd
+reality-checker
+
+# Rétention
+customer-success-manager
+
+# Gouvernance et conformité
+automation-governance-architect
+data-privacy-officer

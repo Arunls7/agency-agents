@@ -3,7 +3,7 @@
 # setup-agence.sh — configure Claude Code pour une agence IA (cible : TPE-PME françaises).
 #
 #   0 prérequis · 1 sauvegarde · 2 dépôt agency-agents · 3 agents FR ·
-#   4 claude-mem (mémoire locale) · 5 vérifications
+#   4 commandes /slash et fichiers de référence · 5 claude-mem (mémoire locale) · 6 vérifications
 #
 # Ne touche qu'à ~/.claude, ~/.claude-mem et ~/tools. Pas de sudo.
 # Demande confirmation avant d'écraser un fichier ou d'installer quoi que ce soit.
@@ -16,6 +16,7 @@
 #   --avec-originaux  installe aussi les versions anglaises d'origine
 #                     (déconseillé : Claude risque de choisir la version anglaise)
 #   --sans-mem        n'installe pas claude-mem
+#   --maj             (utilisé par mettre-a-jour.sh) remplace les fichiers du kit sans demander
 
 set -euo pipefail
 
@@ -24,13 +25,17 @@ AA_DIR="$(cd "${KIT_DIR}/.." && pwd)"
 TEAM_FILE="${KIT_DIR}/agency-team.txt"
 CLAUDE_DIR="${HOME}/.claude"
 AGENTS_DIR="${CLAUDE_DIR}/agents"
+COMMANDS_DIR="${CLAUDE_DIR}/commands"
+REF_DIR="${CLAUDE_DIR}/agence-ia-fr"
 
 WITH_ORIGINALS=false
 WITH_MEM=true
+UPDATE=false
 for arg in "$@"; do
   case "$arg" in
     --avec-originaux) WITH_ORIGINALS=true ;;
     --sans-mem) WITH_MEM=false ;;
+    --maj) UPDATE=true ;;  # utilisé par mettre-a-jour.sh : remplace les agents -fr sans demander
     -h|--help) sed -n '2,19p' "$0"; exit 0 ;;
     *) echo "Option inconnue : $arg (voir --help)" >&2; exit 2 ;;
   esac
@@ -79,6 +84,26 @@ source_file() {
   [[ -n "$f" ]] && echo "$f"
 }
 
+# install_kit_file <source> <destination> — copie un fichier du kit sans écraser
+# en silence un fichier différent ; note les créations dans l'inventaire.
+install_kit_file() {
+  local src="$1" dest="$2" name
+  name="$(basename "$dest")"
+  if [[ -e "$dest" ]]; then
+    if cmp -s "$src" "$dest"; then ok "$name (déjà à jour)"; return 0; fi
+    if $UPDATE; then
+      info "nouvelle version de $name (l'ancienne est dans la sauvegarde)"
+    else
+      ask "$name existe déjà et diffère. L'écraser (l'ancien est dans la sauvegarde) ?" \
+        || { warn "conservé tel quel, la version du kit n'est PAS installée : $name"; return 1; }
+    fi
+  else
+    echo "$dest" >>"$MANIFEST"
+  fi
+  cp "$src" "$dest"
+  ok "$name"
+}
+
 # ---------------------------------------------------------------------------
 step "Étape 0 — Prérequis"
 missing=()
@@ -104,9 +129,9 @@ ok "prérequis présents (Node $node_major)"
 # ---------------------------------------------------------------------------
 step "Étape 1 — Sauvegarde"
 BACKUP_DIR="${CLAUDE_DIR}/backups/$(date +%Y-%m-%d-%H%M%S)"
-info "→ crée $BACKUP_DIR et y copie agents/, settings.json et plugins/ s'ils existent"
+info "→ crée $BACKUP_DIR et y copie agents/, commands/, settings.json et plugins/ s'ils existent"
 mkdir -p "$BACKUP_DIR"
-for item in agents settings.json plugins; do
+for item in agents commands settings.json plugins; do
   if [[ -e "${CLAUDE_DIR}/${item}" ]]; then
     cp -R "${CLAUDE_DIR}/${item}" "$BACKUP_DIR/"
     ok "sauvegardé : ~/.claude/${item}"
@@ -118,6 +143,9 @@ done
 MANIFEST="${BACKUP_DIR}/fichiers-ajoutes.txt"
 : >"$MANIFEST"
 echo "$BACKUP_DIR" >"${CLAUDE_DIR}/backups/LATEST"
+# La toute première sauvegarde (avant le kit) sert de référence à annuler.sh,
+# même après plusieurs mises à jour.
+[[ -s "${CLAUDE_DIR}/backups/AVANT-AGENCE" ]] || echo "$BACKUP_DIR" >"${CLAUDE_DIR}/backups/AVANT-AGENCE"
 ok "sauvegarde : $BACKUP_DIR"
 
 # ---------------------------------------------------------------------------
@@ -176,21 +204,32 @@ for src in "${fr_files[@]}"; do
     || { warn "$name : ne commence pas par '---', ignoré."; continue; }
   grep -q "^name: ${name%.md}\$" <<<"$fm" || { warn "$name : champ name invalide, ignoré."; continue; }
   grep -q '^description: ' <<<"$fm" || { warn "$name : description manquante, ignoré."; continue; }
-  if [[ -e "$dest" ]]; then
-    if cmp -s "$src" "$dest"; then ok "$name (déjà à jour)"; n_ok=$((n_ok + 1)); continue; fi
-    ask "$name existe déjà et diffère. L'écraser (l'ancien est dans la sauvegarde) ?" \
-      || { info "conservé : $name"; continue; }
-  else
-    echo "$dest" >>"$MANIFEST"
-  fi
-  cp "$src" "$dest"
-  ok "$name"
-  n_ok=$((n_ok + 1))
+  install_kit_file "$src" "$dest" && n_ok=$((n_ok + 1))
 done
 ok "$n_ok/${#fr_files[@]} agents FR en place"
 
 # ---------------------------------------------------------------------------
-step "Étape 4 — claude-mem (mémoire locale)"
+step "Étape 4 — Commandes /slash et fichiers de référence"
+mkdir -p "$COMMANDS_DIR" "$REF_DIR"
+cmd_files=("${KIT_DIR}"/commandes/*.md)
+info "${#cmd_files[@]} commandes à copier dans ~/.claude/commands/ (ex. /agence, /decouverte, /proposition)"
+n_cmd=0
+for src in "${cmd_files[@]}"; do
+  install_kit_file "$src" "${COMMANDS_DIR}/$(basename "$src")" && n_cmd=$((n_cmd + 1))
+done
+ok "$n_cmd/${#cmd_files[@]} commandes en place"
+# Fichiers de référence lus par les agents et les commandes (propres au kit).
+cp "${KIT_DIR}/modele-agence/CLAUDE.md" "${REF_DIR}/modele-CLAUDE.md"
+ok "modèle de CLAUDE.md d'agence : ~/.claude/agence-ia-fr/modele-CLAUDE.md"
+if [[ -f "${KIT_DIR}/faits-dates.md" ]]; then
+  cp "${KIT_DIR}/faits-dates.md" "${REF_DIR}/faits-dates.md"
+  ok "registre des faits datés : ~/.claude/agence-ia-fr/faits-dates.md"
+else
+  warn "registre des faits datés absent du kit : les agents s'appuieront sur les sources officielles."
+fi
+
+# ---------------------------------------------------------------------------
+step "Étape 5 — claude-mem (mémoire locale)"
 if ! $WITH_MEM; then
   info "ignoré (--sans-mem)"
 else
@@ -218,12 +257,14 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-step "Étape 5 — À vérifier dans Claude Code"
-info "1. Ouvrez Claude Code et tapez /agents : les agents en -fr doivent apparaître."
-info "2. Test : « Utilise sales-discovery-coach-fr : propose 5 questions d'ouverture"
-info "   pour un entretien avec un dirigeant de cabinet comptable. »"
+step "Étape 6 — Premiers pas dans Claude Code"
+info "1. Créez un dossier pour l'agence (ex. mkdir ~/Agence && cd ~/Agence), lancez claude,"
+info "   puis tapez /configurer-agence : une dizaine de questions pour décrire vos offres et tarifs."
+info "2. Tapez /agents : les agents en -fr doivent apparaître."
+info "3. Test : /decouverte dirigeant d'un cabinet comptable de 8 personnes"
 info "   Attendu : réponse en français, vouvoiement, contexte cabinet comptable."
-$WITH_MEM && info "3. npx claude-mem status  (ou http://127.0.0.1:37700)"
+info "4. Vous ne savez pas quel agent utiliser ? /agence suivi de votre demande."
+$WITH_MEM && info "5. npx claude-mem status  (ou http://127.0.0.1:37700)"
 echo
 ok "Terminé. Sauvegarde : $BACKUP_DIR"
 info "Annuler       : bash ${KIT_DIR}/annuler.sh"

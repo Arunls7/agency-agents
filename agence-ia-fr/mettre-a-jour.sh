@@ -28,5 +28,5 @@ if [[ "$before" != "$after" ]]; then
   fi
 fi
 
-# Réinstalle (avec sauvegarde) ; setup-agence.sh demande avant d'écraser quoi que ce soit.
-bash "${KIT_DIR}/setup-agence.sh" "$@"
+# Réinstalle avec une nouvelle sauvegarde ; les agents -fr du kit sont remplacés par leur nouvelle version.
+bash "${KIT_DIR}/setup-agence.sh" --maj "$@"

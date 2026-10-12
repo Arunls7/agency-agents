@@ -1,6 +1,9 @@
-# Agents agency-agents utilisés par l'agence (un identifiant par ligne).
+# Agents agency-agents d'origine adaptés par le kit (un identifiant par ligne).
 # Identifiants vérifiés avec ./scripts/install.sh --list agents (octobre 2026).
-# Chacun a une version française dans agents/ (même nom + suffixe -fr).
+# Chaque original a sa version française dans agents/ (nom du fichier + -fr).
+# Les agents créés de zéro (contenu-video-ia-fr, avis-reputation-locale-fr,
+# partenaires-prescripteurs-fr, veille-marche-ia-fr, juriste-contrats-fr)
+# n'ont pas d'original et ne figurent donc pas ici.
 
 # Vente
 discovery-coach
@@ -10,10 +13,14 @@ offer-lead-gen-strategist
 sales-engineer
 pricing-analyst
 
-# Acquisition (marketing)
+# Acquisition et contenu
 linkedin-content-creator
 seo-specialist
 email-marketing-strategist
+paid-social-strategist
+ppc-campaign-strategist
+tracking-measurement-specialist
+ad-creative-strategist
 
 # Production (conception et livraison)
 ai-engineer
@@ -25,6 +32,7 @@ voice-ai-integration-engineer
 prompt-engineer
 project-shepherd
 reality-checker
+it-service-manager
 
 # Rétention
 customer-success-manager
@@ -32,3 +40,14 @@ customer-success-manager
 # Gouvernance et conformité
 automation-governance-architect
 data-privacy-officer
+legal-compliance-checker
+
+# Argent
+chief-financial-officer
+legal-billing-time-tracking
+grant-writer
+
+# Développement et organisation
+business-strategist
+product-manager
+chief-of-staff

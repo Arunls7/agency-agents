@@ -32,6 +32,14 @@ AGENTS_DIR="${CLAUDE_DIR}/agents"
 COMMANDS_DIR="${CLAUDE_DIR}/commands"
 REF_DIR="${CLAUDE_DIR}/agence-ia-fr"
 
+# L'installeur officiel de Claude Code (~/.local/bin) et Homebrew ne sont pas toujours dans
+# le PATH du terminal (par exemple si ~/.zshrc n'a pas pu être modifié) : on les ajoute ici,
+# pour ce script seulement.
+for d in "${HOME}/.local/bin" "${HOME}/.claude/local" /opt/homebrew/bin /usr/local/bin; do
+  [[ -d "$d" && ":${PATH}:" != *":${d}:"* ]] && PATH="${d}:${PATH}"
+done
+export PATH
+
 WITH_ORIGINALS=false
 WITH_MEM=true
 UPDATE=false
@@ -128,6 +136,10 @@ for bin in git node npm claude; do
 done
 if ((${#missing[@]})); then
   warn "Manquant : ${missing[*]}"
+  if [[ " ${missing[*]} " == *" claude "* ]]; then
+    info "Claude Code n'est ni dans votre PATH, ni dans ~/.local/bin. Installez-le :"
+    info "  curl -fsSL https://claude.ai/install.sh | bash"
+  fi
   info "git    → https://git-scm.com/downloads"
   info "node   → https://nodejs.org (version 20 ou plus, npm inclus)"
   info "claude → https://docs.claude.com/fr/docs/claude-code/setup"

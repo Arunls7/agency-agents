@@ -21,6 +21,7 @@ Le kit installe aussi :
 - **Système** : macOS ou Linux. Sous Windows, passez par WSL.
 - **À installer** : [git](https://git-scm.com/downloads), [Node.js 20 ou plus](https://nodejs.org) (npm inclus), [Claude Code](https://docs.claude.com/fr/docs/claude-code/setup), et un abonnement Claude.
 - **Durée** : environ 10 minutes. Le script pose des questions : lisez-les avant de répondre.
+- **« command not found: claude »** : l'installeur de Claude Code le place dans `~/.local/bin`, que le terminal ne connaît pas toujours. Le script du kit le trouve quand même. Pour taper `claude` dans le terminal, lancez `echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zprofile`, puis ouvrez un nouveau terminal. Si le terminal répond « permission denied », ce fichier appartient à un autre compte : `ls -l ~/.zprofile ~/.zshrc` vous le montre.
 - **Aucun code à écrire.** Les agents techniques (« Production ») servent à concevoir les solutions que vous vendez. Les autres s'utilisent en langage courant.
 
 ## Installation

@@ -26,6 +26,13 @@
 
 Conditions de paiement habituelles : {{CONDITIONS}} (par exemple acompte de 30 % à la commande, solde à la recette, paiement à 30 jours).
 
+## Repères financiers (pour calculer les prix)
+
+- Rémunération nette visée par mois : {{REMUNERATION}}
+- Frais fixes annuels (logiciels, assurances, expert-comptable…) : {{FRAIS_FIXES}}
+- Heures facturables par an : {{HEURES_FACTURABLES}}
+- Taux horaire cible HT : {{TAUX_HORAIRE}}
+
 ## Clients cibles
 
 - Métiers prioritaires : {{METIERS}} (cabinets d'expertise comptable, agences immobilières, artisans du bâtiment, e-commerçants…)
@@ -36,7 +43,8 @@ Conditions de paiement habituelles : {{CONDITIONS}} (par exemple acompte de 30 %
 ## Ton et style
 
 - Vouvoiement avec les clients et prospects ; tutoiement seulement si le client le propose.
-- Avec le fondateur : tutoiement (remplacez par « vouvoiement » si vous préférez que les agents vous vouvoient).
+- Avec le fondateur : tutoiement dans toutes les réponses, y compris quand un agent relaie le travail d'un autre (remplacez par « vouvoiement » si vous préférez que les agents vous vouvoient).
+- Typographie française : espace insécable avant : ; ? ! et à l'intérieur des guillemets « ».
 - Ton : {{TON}} (par exemple direct, concret, sans jargon).
 - Mots à éviter : {{MOTS_A_EVITER}}
 

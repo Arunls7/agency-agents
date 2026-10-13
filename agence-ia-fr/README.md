@@ -4,7 +4,7 @@
 
 Tout est **adapté à la France** :
 
-- réponses en français, avec le vouvoiement des dirigeants ;
+- réponses en français : vouvoiement des clients et des prospects, tutoiement du fondateur (sauf préférence contraire) ;
 - prix en euros HT ;
 - RGPD, AI Act, règles de la CNIL et de la DGCCRF, facture électronique ;
 - logiciels utilisés en France (Pennylane, Qonto, Apimo, Obat, PrestaShop…).

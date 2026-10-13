@@ -45,10 +45,14 @@ const JETON = crypto.randomBytes(24).toString('hex');
 // Task (nommé Agent dans les versions récentes) permet de confier une partie du travail à un autre agent -fr.
 const OUTILS_LECTURE = ['Read', 'Glob', 'Grep', 'WebSearch', 'WebFetch', 'Task', 'Agent'];
 const OUTILS_ECRITURE = ['Write', 'Edit'];
+// Mémoire locale claude-mem (~/.claude-mem) : ses outils MCP sont autorisés. Les autres serveurs MCP
+// restent refusés dans l'application (pas de question possible) et s'utilisent depuis le terminal.
+const OUTILS_MEMOIRE = ['mcp__plugin_claude-mem_mcp-search', 'mcp__claude-mem'];
 const CONTEXTE_APP = "Tu réponds dans l'application de bureau « Agence IA » : une fenêtre de discussion, pas un terminal. "
   + 'Tes réponses sont affichées en Markdown. Tu ne peux pas exécuter de commande shell. '
   + "Si tu dois créer ou modifier un fichier et que l'outil d'écriture n'est pas disponible, demande à l'utilisateur de cocher "
   + "« Autoriser la création de fichiers » en haut de la discussion puis de renvoyer sa demande ; tu n'écris que dans le dossier de l'agence. "
+  + "Ta mémoire claude-mem est disponible ; les autres outils externes (MCP) ne sont pas autorisés ici : propose alors un fichier dans le dossier de l'agence, ou de passer par le terminal. "
   + `Dossier personnel de l'utilisateur (~) : ${HOME}. Dossier de l'agence : ${AGENCE_DIR}.`;
 let port = 0;
 let dernierSigne = Date.now();
@@ -135,7 +139,7 @@ function tour(conv, prompt, ecriture, emettre, suivi) {
       // Outils disponibles : lecture et web ; écriture en plus si autorisée. Les écritures ne
       // sont acceptées sans question que dans le dossier de travail (le dossier de l'agence).
       '--tools', [...OUTILS_LECTURE, ...(permis ? OUTILS_ECRITURE : [])].join(','),
-      '--allowedTools', OUTILS_LECTURE.join(','),
+      '--allowedTools', [...OUTILS_LECTURE, ...OUTILS_MEMOIRE].join(','),
       ...(permis ? ['--permission-mode', 'acceptEdits'] : []),
       '--append-system-prompt', CONTEXTE_APP,
       ...(conv.demarree ? ['--resume', conv.sessionId] : ['--session-id', conv.sessionId]),

@@ -78,6 +78,7 @@ L'application s'ouvre dans sa propre fenêtre, sans barre d'adresse. Elle a beso
 - **Réponses au fil de l'eau**, mises en forme (titres, listes, tableaux), avec un bouton **Copier**. Échap ou le bouton carré arrête une réponse.
 - **Actions visibles** : les fichiers lus, les recherches web et les délégations à un autre agent s'affichent au-dessus de la réponse.
 - **Création de fichiers** : désactivée par défaut, l'agent lit et cherche sans rien modifier. Activez **Autoriser la création de fichiers** pour qu'il écrive un devis ou une note, uniquement dans `~/Agence`.
+- **Mémoire** : si claude-mem est installé, l'agent peut y noter et y retrouver des points de travail, sans réglage. Les autres outils externes (serveurs MCP) ne sont pas autorisés dans l'application : utilisez-les depuis le terminal (`claude`).
 - **Historique** : chaque discussion garde sa mémoire. Elle est rangée par date, consultable, exportable en Markdown ou supprimable.
 
 **Ce qu'il faut savoir** :

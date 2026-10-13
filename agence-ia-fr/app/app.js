@@ -230,6 +230,13 @@
   function libelleOutil(o) {
     let [lib, ico] = OUTILS[o.nom] || [o.nom, 'outil'];
     let detail = o.detail || '';
+    const mcp = /^mcp__(.+?)__(.+)$/.exec(o.nom || '');
+    if (mcp) {
+      const memoire = /claude-mem/.test(mcp[1]);
+      lib = memoire ? 'Mémoire' : 'Outil externe';
+      ico = memoire ? 'fichier' : 'outil';
+      detail = memoire ? mcp[2].replace(/_/g, ' ') : `${mcp[2]} (${mcp[1].replace(/^plugin_/, '')})`;
+    }
     const d = /^([a-z0-9-]+) — (.*)$/.exec(detail);
     if (ico === 'equipe' && d && agents.has(d[1])) { lib = `Délégation à ${agents.get(d[1]).titre}`; detail = d[2]; }
     return { lib, ico, detail };
@@ -247,7 +254,7 @@
       const dernier = outils[outils.length - 1];
       resume.textContent = '';
       const l = dernier ? libelleOutil(dernier) : null;
-      resume.append(svg(ICONES.outil), `${n} action${n > 1 ? 's' : ''}`, l ? h('span', null, ` · ${l.lib.toLowerCase()}${l.detail ? ` : ${l.detail}` : ''}`) : null);
+      resume.append(svg(ICONES.outil), `${n} action${n > 1 ? 's' : ''}`, ...(l ? [h('span', null, ` · ${l.lib.toLowerCase()}${l.detail ? ` : ${l.detail}` : ''}`)] : []));
     };
     outils.forEach(o => ul.append(puceOutil(o)));
     d.append(resume, ul);
@@ -266,10 +273,19 @@
   function notes(m, conv) {
     const n = [];
     if (m.refus && m.refus.length) {
-      n.push(h('div', { class: 'note attention' },
-        h('b', null, 'Action non autorisée. '),
-        `L'agent a voulu : ${m.refus.map(r => { const l = libelleOutil(r); return `${l.lib.toLowerCase()}${l.detail ? ` ${l.detail}` : ''}`; }).join(', ')}. `,
-        `Les fichiers ne peuvent être créés que dans ${A.agence}, après avoir activé « Autoriser la création de fichiers ».`));
+      const texte = r => { const l = libelleOutil(r); return `${l.lib.toLowerCase()}${l.detail ? ` ${l.detail}` : ''}`; };
+      const vus = new Set();
+      const uniques = m.refus.filter(r => { const k = `${r.nom}|${r.detail || ''}`; if (vus.has(k)) return false; vus.add(k); return true; });
+      const fichiers = uniques.filter(r => ['Write', 'Edit', 'NotebookEdit'].includes(r.nom));
+      const autres = uniques.filter(r => !['Write', 'Edit', 'NotebookEdit'].includes(r.nom));
+      if (fichiers.length) {
+        n.push(h('div', { class: 'note attention' }, h('b', null, 'Création de fichier refusée. '),
+          `L'agent a voulu : ${fichiers.map(texte).join(', ')}. Les fichiers ne peuvent être créés que dans ${A.agence}, après avoir activé « Autoriser la création de fichiers ».`));
+      }
+      if (autres.length) {
+        n.push(h('div', { class: 'note attention' }, h('b', null, 'Outil non autorisé dans l\'application. '),
+          `L'agent a voulu utiliser : ${autres.map(texte).join(', ')}. L'interrupteur ne concerne que la création de fichiers ; cet outil s'utilise depuis le terminal (claude).`));
+      }
     }
     if (m.erreur) {
       n.push(h('div', { class: 'note erreur' }, h('b', null, 'Erreur. '), m.erreur,

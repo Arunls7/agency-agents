@@ -142,6 +142,7 @@ function tour(conv, prompt, ecriture, emettre, suivi) {
     ];
     const env = { ...process.env, DO_NOT_TRACK: '1' };
     delete env.CLAUDECODE; // pas de « session imbriquée » si l'app est lancée depuis Claude Code
+    env.CLAUDE_AUTO_BACKGROUND_TASKS = 'false'; // la réponse d'un sous-agent long reste dans le même tour
     const debut = Date.now();
     let texte = '', separer = false, deltas = false, resultat = null, stderr = '', tampon = '', fini = false;
     const outils = [];

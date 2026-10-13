@@ -1,6 +1,6 @@
 # 🇫🇷 Agence IA — kit Claude Code pour les TPE-PME françaises
 
-38 agents et 22 commandes pour faire tourner une agence IA qui vend à des **dirigeants de TPE-PME françaises** : cabinets d'expertise comptable, agences immobilières, artisans du bâtiment, e-commerçants.
+38 agents et 26 commandes pour faire tourner une agence IA qui vend à des **dirigeants de TPE-PME françaises** : cabinets d'expertise comptable, agences immobilières, artisans du bâtiment, e-commerçants.
 
 Tout est **adapté à la France** :
 
@@ -139,8 +139,12 @@ L'application ne connaît pas les agents `-fr` : pour eux, utilisez l'applicatio
 | `/video` | Script, découpage et prompts d'une vidéo IA (Higgsfield, Veo, Kling…) |
 | `/pub` | Campagne Meta, LinkedIn ou Google Ads |
 | `/avis` | Obtenir des avis Google ou répondre à un avis |
+| `/cadrage` | Cadrer un projet avant de le construire : questions par rondes, puis fiche de cadrage |
+| `/questionnaire-client` | Questionnaire à envoyer à un client ou un prospect pour obtenir ce qui vous manque |
 | `/automatisation` | Cartographier un processus client et concevoir son automatisation |
+| `/plan-livraison` | Plan de livraison par petites étapes, chacune avec son test et sa preuve |
 | `/recette` | Vérifier qu'une solution est prête à être livrée |
+| `/diagnostic` | Une automatisation livrée ne marche plus : trouver la cause avant de corriger |
 | `/rgpd` | Question RGPD |
 | `/contrat` | Préparer ou relire un contrat |
 | `/tresorerie` | Point trésorerie et marge |
@@ -231,6 +235,19 @@ Vous pouvez aussi appeler un agent par son nom : « Utilise `juriste-contrats-fr
 
 Ces agents donnent un cadre et posent les bonnes questions. Ils **ne remplacent pas un avocat, un DPO ou un expert-comptable**.
 
+## Méthodes reprises d'autres projets
+
+Quatre projets open source ont été étudiés, chacun relu dans son code et contre-expertisé pour la sécurité. Le kit n'installe aucun d'eux : il en reprend les meilleures méthodes, réécrites en français pour une agence qui livre des automatisations.
+
+| Projet | Ce que le kit en reprend | Pourquoi pas plus |
+|---|---|---|
+| [superpowers](https://github.com/obra/superpowers) (Jesse Vincent, MIT) | `/cadrage` (questions avant de construire), `/plan-livraison` (petites étapes, test écrit avant, preuve avant de dire « fini »), `/diagnostic` (la cause avant la correction) | Installé tel quel, il injecte des consignes en anglais à chaque session et peut lancer seul des installations de paquets : il gênerait les agents en français et l'application. |
+| [skills de Matt Pocock](https://github.com/mattpocock/skills) (MIT) | les rondes de questions numérotées avec recommandation (`/cadrage`), `/questionnaire-client`, la méthode de diagnostic (`/diagnostic`) | La plupart des skills supposent un développeur (dépôt git, tickets, revues de code). Certains publient des résumés de conversation dans des tickets GitHub, ce qui pose problème avec des données de clients. |
+| [Hermes Agent](https://github.com/NousResearch/hermes-agent) (Nous Research, MIT) | rien pour l'instant | À ne pas installer sur votre Mac : il réutilise le jeton de votre abonnement Claude, en contournant la détection par laquelle Anthropic facture à part les applications tierces, et ajoute un service relancé à chaque connexion. Il pourrait servir plus tard pour un assistant client, sur un serveur dédié, avec une clé d'API payée par le client. Le dépôt agency-agents sait déjà y exporter des agents (`integrations/hermes`). |
+| [Agent-Reach](https://github.com/Panniantong/Agent-Reach) (MIT) | rien | Il demande de coller les cookies de vos comptes X ou LinkedIn dans la conversation, envoie des profils de prospects à des services tiers sans contrat et contacte des serveurs chinois : incompatible avec le RGPD et les conditions d'utilisation de LinkedIn. La recherche web de Claude Code suffit pour la veille. |
+
+Chaque commande adaptée garde la mention de sa source et de sa licence.
+
 ## Le registre des faits datés
 
 [`faits-dates.md`](faits-dates.md) rassemble les règles datées dont les agents ont besoin : démarchage, AI Act, facture électronique, délais de paiement, seuils fiscaux, aides… Chaque règle a sa source et sa date de vérification. Les agents doivent rester cohérents avec ce registre. Les points incertains sont dans une section « À vérifier ».
@@ -293,7 +310,7 @@ Pour récupérer les nouveautés du dépôt d'origine, cliquez d'abord sur **Syn
 | Élément | Rôle |
 |---|---|
 | `agents/` | les 38 agents `-fr` |
-| `commandes/` | les 22 commandes `/slash` |
+| `commandes/` | les 26 commandes `/slash` |
 | `modele-agence/CLAUDE.md` | modèle du contexte de l'agence, rempli par `/configurer-agence` |
 | `faits-dates.md` | registre des faits datés, sourcés et vérifiés |
 | `agency-team.txt` | identifiants des agents d'origine adaptés |

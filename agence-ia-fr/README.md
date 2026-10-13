@@ -1,6 +1,6 @@
 # 🇫🇷 Agence IA — kit Claude Code pour les TPE-PME françaises
 
-38 agents et 26 commandes pour faire tourner une agence IA qui vend à des **dirigeants de TPE-PME françaises** : cabinets d'expertise comptable, agences immobilières, artisans du bâtiment, e-commerçants.
+38 agents et 27 commandes pour faire tourner une agence IA qui vend à des **dirigeants de TPE-PME françaises** : cabinets d'expertise comptable, agences immobilières, artisans du bâtiment, e-commerçants.
 
 Tout est **adapté à la France** :
 
@@ -139,6 +139,7 @@ L'application ne connaît pas les agents `-fr` : pour eux, utilisez l'applicatio
 | `/contenu-semaine` | Une idée déclinée en post, vidéo courte et newsletter |
 | `/video` | Script, découpage et prompts d'une vidéo IA (Higgsfield, Veo, Kling…) |
 | `/pub` | Campagne Meta, LinkedIn ou Google Ads |
+| `/audit-pub` | Audit d'un compte Google Ads, Meta ou LinkedIn à partir d'exports, sans rien modifier |
 | `/avis` | Obtenir des avis Google ou répondre à un avis |
 | `/cadrage` | Cadrer un projet avant de le construire : questions par rondes, puis fiche de cadrage |
 | `/questionnaire-client` | Questionnaire à envoyer à un client ou un prospect pour obtenir ce qui vous manque |
@@ -238,12 +239,13 @@ Ces agents donnent un cadre et posent les bonnes questions. Ils **ne remplacent 
 
 ## Méthodes reprises d'autres projets
 
-Quatre projets open source ont été étudiés : leur code a été relu, puis contre-expertisé pour la sécurité. Le kit n'en installe aucun. Il reprend des méthodes de deux d'entre eux, réécrites en français pour une agence qui livre des automatisations ; les deux autres sont écartés.
+Cinq projets open source ont été étudiés : leur code a été relu, puis contre-expertisé pour la sécurité. Le kit n'en installe aucun. Il reprend des méthodes de trois d'entre eux, réécrites en français pour une agence qui livre des automatisations ; les deux autres sont écartés.
 
 | Projet | Ce que le kit en reprend | Pourquoi pas plus |
 |---|---|---|
 | [superpowers](https://github.com/obra/superpowers) (Jesse Vincent, MIT) | `/cadrage` (questions avant de construire), `/plan-livraison` (petites étapes, test écrit avant, preuve avant de dire « fini »), `/diagnostic` (la cause avant la correction) | Installé tel quel, il injecterait au début de chaque session une consigne impérative en anglais (utiliser ses skills avant toute réponse) et pourrait lancer seul des installations de paquets (npm install, pip install) : il court-circuiterait les commandes du kit et rendrait l'application Agence IA imprévisible. |
 | [skills de Matt Pocock](https://github.com/mattpocock/skills) (MIT) | les rondes de questions numérotées avec recommandation (`/cadrage`), `/questionnaire-client`, la méthode de diagnostic (`/diagnostic`) | La plupart des skills supposent un développeur (dépôt git, tickets, revues de code), et certains publient des résumés de conversation dans des tickets GitHub, ce qui pose problème avec des données de clients. La version installée par la place de marché officielle n'est pas celle qui a été relue et se met à jour seule ; le skill « wizard » lit les fichiers .env (clés d'API). |
+| [claude-ads](https://github.com/AgriciDaniel/claude-ads) (agricidaniel, MIT) | `/audit-pub` (contrôles prouvés, couverture des preuves, démarrage à froid), la fiche de modification et le refus de toute suppression définitive dans les agents pub, les calculs de rentabilité (ROAS et CPA d'équilibre, MER, rendement marginal) et la fiche de test | Installé tel quel, il chargerait 34 skills et 25 agents en anglais à chaque session, créerait un environnement Python, écrirait les données des clients dans le dossier courant et demanderait des clés d'API payantes pour les images. Sa conformité est américaine (aucune mention de la CNIL, de l'ARPP ni de la DGCCRF) et ses dates de mise à jour sont échues. |
 | [Hermes Agent](https://github.com/NousResearch/hermes-agent) (Nous Research, MIT) | rien | À ne pas installer sur votre Mac : par défaut, il emprunte la connexion de votre abonnement Claude, ce que les conditions d'Anthropic interdisent (risque de suspension du compte qui fait tourner tout le kit, et Claude Code peut se retrouver déconnecté) ; son code est même écrit pour échapper à la détection par laquelle Anthropic facture à part les applications tierces. L'installation par défaut ajoute aussi un service relancé à chaque ouverture de session. Déconseillé aussi pour les clients en l'état : un pilote demanderait une machine virtuelle par client, une clé d'API au nom du client, un seul utilisateur par instance (jamais un bot ouvert à des prospects), de nombreux réglages de sécurité, un contrat de sous-traitance et l'information « vous échangez avec une IA » (AI Act, art. 50). Le dépôt agency-agents sait déjà y exporter ses agents anglais (`integrations/hermes`), mais pas les agents `-fr` de ce kit. |
 | [Agent-Reach](https://github.com/Panniantong/Agent-Reach) (Agent Eyes, MIT) | rien | Il fait coller dans la conversation les cookies de votre compte X, pilote votre session LinkedIn et votre Chrome principal avec toutes ses sessions ouvertes, fait lire des profils LinkedIn de prospects par un service tiers (Jina Reader) sans contrat et contacte des serveurs chinois à chaque diagnostic ; son installation complète ajoute des paquets globaux. C'est incompatible avec le RGPD et les conditions d'utilisation de LinkedIn. La recherche web de Claude Code suffit pour la veille. |
 
@@ -311,7 +313,7 @@ Pour récupérer les nouveautés du dépôt d'origine, cliquez d'abord sur **Syn
 | Élément | Rôle |
 |---|---|
 | `agents/` | les 38 agents `-fr` |
-| `commandes/` | les 26 commandes `/slash` |
+| `commandes/` | les 27 commandes `/slash` |
 | `modele-agence/CLAUDE.md` | modèle du contexte de l'agence, rempli par `/configurer-agence` |
 | `faits-dates.md` | registre des faits datés, sourcés et vérifiés |
 | `agency-team.txt` | identifiants des agents d'origine adaptés |

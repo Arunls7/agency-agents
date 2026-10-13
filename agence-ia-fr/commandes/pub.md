@@ -8,7 +8,8 @@ Délègue cette demande au sous-agent `paid-media-paid-social-strategist-fr`. Si
 
 Contexte à respecter :
 - le fichier CLAUDE.md du dossier courant, s'il existe (offres, tarifs, cibles, ton de l'agence) ;
-- pour toute règle datée (droit, fiscalité, aides, plateformes), le registre `~/.claude/agence-ia-fr/faits-dates.md` fait foi.
+- pour toute règle datée (droit, fiscalité, aides, plateformes), le registre `~/.claude/agence-ia-fr/faits-dates.md` fait foi ;
+- aucune modification d'un compte publicitaire réel : les changements sortent sous forme de fiches de modification (avant / après, plafonds en € HT, retour arrière), à faire valider par écrit par le client, puis appliquées par le fondateur.
 
 Si la demande est vide ou trop vague, pose d'abord deux ou trois questions courtes.
 

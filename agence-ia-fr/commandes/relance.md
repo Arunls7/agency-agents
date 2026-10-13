@@ -4,7 +4,7 @@ argument-hint: "[client, montant, date d'échéance, relances déjà faites]"
 ---
 Demande : $ARGUMENTS
 
-Délègue cette demande au sous-agent `legal-billing-time-tracking-fr`. Ton courtois et ferme, vouvoiement, pénalités et indemnité de 40 € rappelées. Demande (ou indique comme hypothèse) la date de facture, la date d'échéance, les relances déjà faites et l'existence d'un litige. Une date non confirmée reste un champ à compléter dans le courrier : [date de facture], [date d'échéance]. Avant toute mise en demeure, vérifier sur le BODACC que le client n'est pas en procédure collective. Après un refus ou un silence en procédure simplifiée des petites créances, la suite est l'injonction de payer.
+Délègue cette demande au sous-agent `legal-billing-time-tracking-fr`. Ton courtois et ferme, vouvoiement, pénalités et indemnité de 40 € rappelées si le client est un professionnel. Demande (ou indique comme hypothèse) la date de facture, la date d'échéance, les relances déjà faites, l'existence d'un litige et si le client est un professionnel ou un particulier. Une date non confirmée reste un champ à compléter dans le courrier : [date de facture], [date d'échéance]. Avant tout courrier formel, mise en demeure comprise, vérifier sur le BODACC que le client n'est pas en procédure collective ; pas de mise en demeure sans décision du fondateur. Après un refus ou un silence en procédure simplifiée des petites créances, la suite est l'injonction de payer, sur nouvelle décision du fondateur.
 
 Contexte à respecter :
 - le fichier CLAUDE.md du dossier courant, s'il existe (offres, tarifs, cibles, ton de l'agence) ;

@@ -3,9 +3,11 @@
 # setup-agence.sh — configure Claude Code pour une agence IA (cible : TPE-PME françaises).
 #
 #   0 prérequis · 1 sauvegarde · 2 dépôt agency-agents · 3 agents FR ·
-#   4 commandes /slash et fichiers de référence · 5 claude-mem (mémoire locale) · 6 vérifications
+#   4 commandes /slash et fichiers de référence · 5 claude-mem (mémoire locale) ·
+#   6 application Agency Agents (optionnel) · 7 premiers pas et tableau de bord
 #
-# Ne touche qu'à ~/.claude, ~/.claude-mem et ~/tools. Pas de sudo.
+# Ne touche qu'à ~/.claude, ~/.claude-mem et ~/tools (et, si vous l'acceptez, installe
+# l'application Agency Agents avec Homebrew). Pas de sudo.
 # Demande confirmation avant d'écraser un fichier ou d'installer quoi que ce soit.
 #
 # Installation :
@@ -36,7 +38,7 @@ for arg in "$@"; do
     --avec-originaux) WITH_ORIGINALS=true ;;
     --sans-mem) WITH_MEM=false ;;
     --maj) UPDATE=true ;;  # utilisé par mettre-a-jour.sh : remplace les agents -fr sans demander
-    -h|--help) sed -n '2,19p' "$0"; exit 0 ;;
+    -h|--help) sed -n '2,20p' "$0"; exit 0 ;;
     *) echo "Option inconnue : $arg (voir --help)" >&2; exit 2 ;;
   esac
 done
@@ -58,6 +60,14 @@ ask() {
   printf '  \033[1m?\033[0m %s [o/N] ' "$1"
   read -r reply </dev/tty || reply=""
   [[ "$reply" =~ ^[oOyY]$ ]]
+}
+
+# ask_oui "question" → comme ask, mais Entrée vaut oui (étapes sans risque).
+ask_oui() {
+  local reply
+  printf '  \033[1m?\033[0m %s [O/n] ' "$1"
+  read -r reply </dev/tty || reply=""
+  [[ ! "$reply" =~ ^[nN]$ ]]
 }
 
 team_ids() { grep -vE '^[[:space:]]*(#|$)' "$TEAM_FILE"; }
@@ -151,7 +161,7 @@ ok "sauvegarde : $BACKUP_DIR"
 # ---------------------------------------------------------------------------
 step "Étape 2 — Dépôt agency-agents"
 info "dépôt : $AA_DIR ($(git -C "$AA_DIR" log -1 --format='%h du %cs' 2>/dev/null || echo 'hors git'))"
-if git -C "$AA_DIR" rev-parse --git-dir >/dev/null 2>&1 && ask "Récupérer la dernière version (git pull) ?"; then
+if git -C "$AA_DIR" rev-parse --git-dir >/dev/null 2>&1 && ask_oui "Récupérer la dernière version (git pull) ?"; then
   git -C "$AA_DIR" pull --ff-only || die "git pull a échoué dans $AA_DIR."
 fi
 
@@ -194,7 +204,7 @@ mkdir -p "$AGENTS_DIR"
 fr_files=("${KIT_DIR}"/agents/*-fr.md)
 [[ -e "${fr_files[0]}" ]] || die "aucun agent dans ${KIT_DIR}/agents."
 info "${#fr_files[@]} agents à copier dans ~/.claude/agents/"
-ask "Continuer ?" || die "arrêt à votre demande."
+ask_oui "Continuer ?" || die "arrêt à votre demande."
 n_ok=0
 for src in "${fr_files[@]}"; do
   name="$(basename "$src")"
@@ -232,7 +242,7 @@ fi
 READ_RULE='Read(~/.claude/agence-ia-fr/**)'
 if grep -qF "$READ_RULE" "${CLAUDE_DIR}/settings.json" 2>/dev/null; then
   ok "lecture du registre déjà autorisée"
-elif ask "Autoriser les agents à lire ~/.claude/agence-ia-fr (registre, modèle) sans vous le demander à chaque fois ?"; then
+elif ask_oui "Autoriser les agents à lire ~/.claude/agence-ia-fr (registre, modèle, en lecture seule) sans vous le demander à chaque fois ?"; then
   if node -e '
     const fs = require("fs"), p = process.argv[1], rule = process.argv[2];
     let s = {};
@@ -267,29 +277,79 @@ else
       ask "Autoriser claude-mem à installer $dep ?" || die "installez $dep puis relancez avec --sans-mem si besoin."
     fi
   done
-  ask "Installer claude-mem en mode local (npx claude-mem install --provider claude) ?" || die "arrêt à votre demande."
-  npx -y claude-mem@latest install --provider claude || die "installation de claude-mem échouée."
-  npx -y claude-mem@latest telemetry disable || warn "à refaire à la main : npx claude-mem telemetry disable"
-  npx -y claude-mem@latest start || warn "le worker n'a pas démarré : npx claude-mem start"
-  npx -y claude-mem@latest status || true
-  if grep -q '"CLAUDE_MEM_CLOUD_SYNC_TOKEN": ""' "${HOME}/.claude-mem/settings.json" 2>/dev/null; then
-    ok "données locales (~/.claude-mem), aucune synchronisation cloud"
+  if [[ -f "${HOME}/.claude-mem/settings.json" ]]; then
+    question="claude-mem est déjà installé. Le mettre à jour (mode local) ?"
   else
-    warn "vérifiez CLAUDE_MEM_PROVIDER et CLAUDE_MEM_CLOUD_SYNC_* dans ~/.claude-mem/settings.json"
+    question="Installer claude-mem en mode local (npx claude-mem install --provider claude) ?"
   fi
-  info "Visionneuse locale : http://127.0.0.1:37700"
+  if ask "$question"; then
+    if npx -y claude-mem@latest install --provider claude; then
+      npx -y claude-mem@latest telemetry disable || warn "à refaire à la main : npx claude-mem telemetry disable"
+      # Pas de publicité pour l'offre payante dans Claude Code : bandeau de démarrage et
+      # message de bienvenue masqués (la mémoire reste transmise à Claude).
+      if node -e '
+        const fs = require("fs"), f = process.argv[1];
+        const s = JSON.parse(fs.readFileSync(f, "utf8"));
+        s.CLAUDE_MEM_CONTEXT_SHOW_TERMINAL_OUTPUT = "false";
+        s.CLAUDE_MEM_WELCOME_HINT_ENABLED = "false";
+        fs.writeFileSync(f, JSON.stringify(s, null, 2) + "\n");
+      ' "${HOME}/.claude-mem/settings.json" 2>/dev/null; then
+        ok "publicités claude-mem masquées"
+      else
+        warn "impossible de masquer les publicités de claude-mem (~/.claude-mem/settings.json)"
+      fi
+      npx -y claude-mem@latest restart >/dev/null 2>&1 || npx -y claude-mem@latest start || warn "le worker n'a pas démarré : npx claude-mem start"
+      if grep -q '"CLAUDE_MEM_CLOUD_SYNC_TOKEN": ""' "${HOME}/.claude-mem/settings.json" 2>/dev/null; then
+        ok "données locales (~/.claude-mem), aucune synchronisation cloud"
+      else
+        warn "vérifiez CLAUDE_MEM_PROVIDER et CLAUDE_MEM_CLOUD_SYNC_* dans ~/.claude-mem/settings.json"
+      fi
+      MEM_PORT="$(node -e 'try { const s = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8")); if (s.CLAUDE_MEM_WORKER_PORT) { console.log(s.CLAUDE_MEM_WORKER_PORT); process.exit(0); } } catch (e) {} console.log(37700 + (process.getuid ? process.getuid() : 77) % 100);' "${HOME}/.claude-mem/settings.json")"
+      info "Visionneuse locale : http://127.0.0.1:${MEM_PORT}"
+      info "En mode local, claude-mem utilise votre quota Claude pour résumer vos sessions."
+    else
+      warn "installation de claude-mem échouée : le reste du kit fonctionne sans (réessayez : npx claude-mem install --provider claude)."
+    fi
+  else
+    info "claude-mem non installé : Claude Code garde sa mémoire native."
+  fi
 fi
 
 # ---------------------------------------------------------------------------
-step "Étape 6 — Premiers pas dans Claude Code"
+step "Étape 6 — Application Agency Agents (optionnel)"
+info "Application de bureau du projet d'origine : parcourt le catalogue anglais (232 agents)"
+info "et l'installe en un clic. Elle ne connaît pas les agents -fr : n'installez pas tout le catalogue,"
+info "sinon Claude risque de choisir des versions anglaises."
+if [[ "$(uname -s)" == "Darwin" ]] && command -v brew >/dev/null 2>&1; then
+  if brew list --cask agency-agents >/dev/null 2>&1; then
+    ok "application déjà installée"
+  elif ask "Installer l'application Agency Agents (brew install --cask msitarzewski/agency-agents/agency-agents) ?"; then
+    if brew install --cask msitarzewski/agency-agents/agency-agents; then
+      mkdir -p "$REF_DIR" && touch "${REF_DIR}/app-installee-par-le-kit"
+      ok "application installée (dans vos Applications)"
+    else
+      warn "installation de l'application échouée : téléchargez-la sur https://agencyagents.app"
+    fi
+  else
+    info "non installée. Plus tard : brew install --cask msitarzewski/agency-agents/agency-agents"
+  fi
+else
+  info "Téléchargement : https://github.com/msitarzewski/agency-agents-app/releases/latest (https://agencyagents.app)"
+fi
+
+# ---------------------------------------------------------------------------
+step "Étape 7 — Premiers pas dans Claude Code"
 info "1. Créez un dossier pour l'agence (ex. mkdir ~/Agence && cd ~/Agence), lancez claude,"
 info "   puis tapez /configurer-agence : une dizaine de questions pour décrire vos offres et tarifs."
 info "2. Tapez /agents : les agents en -fr doivent apparaître."
 info "3. Test : /decouverte dirigeant d'un cabinet comptable de 8 personnes"
 info "   Attendu : réponse en français, vouvoiement, contexte cabinet comptable."
 info "4. Vous ne savez pas quel agent utiliser ? /agence suivi de votre demande."
-$WITH_MEM && info "5. npx claude-mem status  (ou http://127.0.0.1:37700)"
+info "5. Tableau de bord : bash ${KIT_DIR}/tableau-de-bord.sh"
 echo
 ok "Terminé. Sauvegarde : $BACKUP_DIR"
 info "Annuler       : bash ${KIT_DIR}/annuler.sh"
 info "Mettre à jour : bash ${KIT_DIR}/mettre-a-jour.sh"
+if ask_oui "Ouvrir le tableau de bord maintenant ?"; then
+  bash "${KIT_DIR}/tableau-de-bord.sh" || warn "tableau de bord non généré (voir ci-dessus)."
+fi

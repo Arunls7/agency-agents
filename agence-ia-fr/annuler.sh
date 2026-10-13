@@ -60,7 +60,11 @@ if ((${#to_remove[@]})); then
     echo "  supprimés"
   fi
 fi
-if [[ -d "$REF_DIR" ]] && ask "Supprimer ~/.claude/agence-ia-fr (registre et modèle, propres au kit) ?"; then
+if [[ -f "${REF_DIR}/app-installee-par-le-kit" ]] && command -v brew >/dev/null 2>&1 \
+  && ask "Désinstaller l'application Agency Agents (installée par le kit) ?"; then
+  brew uninstall --cask agency-agents && echo "  application désinstallée" || echo "  désinstallation échouée : voir ci-dessus"
+fi
+if [[ -d "$REF_DIR" ]] && ask "Supprimer ~/.claude/agence-ia-fr (registre, modèle, tableau de bord, propres au kit) ?"; then
   rm -rf -- "$REF_DIR"
   echo "  supprimé"
 fi

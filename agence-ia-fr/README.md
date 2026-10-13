@@ -36,7 +36,11 @@ Le script :
 3. vérifie que les agents d'origine existent toujours ;
 4. copie les agents `-fr` dans `~/.claude/agents/` et les commandes dans `~/.claude/commands/`. Il demande toujours avant d'écraser un fichier ;
 5. installe le registre des faits datés et le modèle de `CLAUDE.md` dans `~/.claude/agence-ia-fr/`, puis propose d'ajouter à `~/.claude/settings.json` la règle `Read(~/.claude/agence-ia-fr/**)`. Sans elle, Claude vous demande l'autorisation chaque fois qu'un agent consulte le registre ;
-6. installe claude-mem en local, sans télémétrie.
+6. installe claude-mem en local, sans télémétrie et sans les publicités de l'offre payante ;
+7. propose d'installer l'application de bureau Agency Agents (sur Mac, avec Homebrew) ;
+8. propose d'ouvrir le tableau de bord.
+
+Les questions sans risque (`git pull`, « Continuer ? », lecture du registre, ouverture du tableau de bord) sont à « oui » par défaut : Entrée suffit. Celles qui écrasent un fichier ou installent un logiciel sont à « non » par défaut : tapez `o` pour accepter.
 
 Il ne touche qu'à `~/.claude`, `~/.claude-mem` et `~/tools`, sauf si vous acceptez que claude-mem installe Bun ou uv (voir plus bas). Il n'utilise jamais sudo.
 
@@ -52,6 +56,37 @@ Il ne touche qu'à `~/.claude`, `~/.claude-mem` et `~/tools`, sauf si vous accep
 3. **Vous ne savez pas quoi utiliser ?** `/agence` suivi de votre demande en une phrase : la demande est confiée au bon agent.
 
 Ouvrez toujours Claude Code dans ce dossier pour que le contexte de l'agence soit pris en compte.
+
+## Le tableau de bord
+
+```bash
+bash ~/tools/agency-agents/agence-ia-fr/tableau-de-bord.sh
+```
+
+Une page locale, sur le modèle du tableau de bord de l'application Agency Agents, qui s'ouvre dans votre navigateur. Elle est générée sur votre ordinateur, sans aucune ressource externe ni donnée envoyée.
+
+- **Tableau de bord** :
+  - agents disponibles et installés ;
+  - santé de l'installation (à jour, obsolètes, modifiés, non suivis, manquants) ;
+  - couverture par outil ;
+  - remplissage de votre fiche d'agence ;
+  - catalogue par domaine.
+- **Agents** : recherche et filtre par domaine, avec les commandes qui appellent chaque agent.
+- **Commandes**, **Registre** (règles par thème et points à vérifier), **Outils** (claude-mem, application, commandes utiles) et **Activité** (installations et mises à jour).
+
+Relancez la commande pour l'actualiser. Pour un autre dossier d'agence : `bash …/tableau-de-bord.sh ~/MonAgence`.
+
+## L'application Agency Agents
+
+L'application de bureau du projet d'origine ([agencyagents.app](https://agencyagents.app)) parcourt le catalogue **anglais** (environ 230 agents) et l'installe en un clic. `setup-agence.sh` propose de l'installer ; vous pouvez aussi le faire vous-même :
+
+```bash
+brew install --cask msitarzewski/agency-agents/agency-agents
+```
+
+Sur Linux ou Windows, ou sans Homebrew, passez par la [page de téléchargement](https://github.com/msitarzewski/agency-agents-app/releases/latest).
+
+L'application ne connaît pas les agents `-fr` : pour eux, utilisez le tableau de bord ci-dessus. N'y installez pas tout le catalogue anglais, sinon Claude risque de choisir une version anglaise à la place d'un agent français. `annuler.sh` la désinstalle si c'est le kit qui l'a installée.
 
 ## Les commandes
 
@@ -180,13 +215,15 @@ Higgsfield propose aussi un MCP officiel (`https://mcp.higgsfield.ai/mcp`), un C
 
 ## claude-mem : ce qu'il faut savoir
 
-Ce qui suit vaut pour claude-mem 13.36, testé en octobre 2026.
+Ce qui suit vaut pour claude-mem 13.36 et 13.37, testés en octobre 2026.
 
-- **Mode local** (`--provider claude`). Les souvenirs restent dans `~/.claude-mem`. Pas de compte cmem.ai, pas de synchronisation cloud, pas d'essai payant.
+- **Mode local** (`--provider claude`). Les souvenirs restent dans `~/.claude-mem`. Pas de compte cmem.ai, pas de synchronisation cloud, rien à payer.
+- **Quota** : en mode local, claude-mem résume vos sessions avec **votre propre quota Claude**. Si vous atteignez souvent votre limite, retirez-le (`npx claude-mem uninstall`) : Claude Code garde sa mémoire native et votre `CLAUDE.md`.
+- **Publicités** : claude-mem affiche par défaut une offre d'essai payante (« 30 Day Free Trial ») au démarrage. Le script la masque avec deux réglages de `~/.claude-mem/settings.json` (`CLAUDE_MEM_CONTEXT_SHOW_TERMINAL_OUTPUT` et `CLAUDE_MEM_WELCOME_HINT_ENABLED` à `"false"`). La mémoire reste transmise à Claude.
 - **Télémétrie** : activée par défaut par claude-mem, le script la désactive.
 - **Bun et uv** : s'ils manquent, l'installeur de claude-mem les télécharge (`curl … | bash`) dans `~/.bun` et `~/.local/bin`. Le script demande d'abord. Vous pouvez aussi les installer vous-même : `brew install oven-sh/bun/bun uv`.
 - **Le jeton crypto « CMEM »** n'a aucun rapport avec l'outil.
-- **Où le consulter** : la visionneuse est sur <http://127.0.0.1:37700>, l'état du service s'affiche avec `npx claude-mem status`.
+- **Où le consulter** : la visionneuse est sur `http://127.0.0.1:` suivi du port de votre session. Il vaut 37700 plus votre numéro d'utilisateur modulo 100, donc souvent **37701** sur Mac. Le script et le tableau de bord affichent la bonne adresse, et `npx claude-mem status` donne l'état du service.
 
 ## Annuler
 
@@ -226,6 +263,7 @@ Pour récupérer les nouveautés du dépôt d'origine, cliquez d'abord sur **Syn
 | `faits-dates.md` | registre des faits datés, sourcés et vérifiés |
 | `agency-team.txt` | identifiants des agents d'origine adaptés |
 | `setup-agence.sh` · `annuler.sh` · `mettre-a-jour.sh` | installation, retour en arrière, mise à jour |
+| `tableau-de-bord.sh` · `outils/tableau-de-bord.mjs` | tableau de bord local |
 
 Ce dossier n'est pas une « division » d'agency-agents : l'installeur d'origine ne le parcourt pas, et il est exclu de `scripts/check-divisions.sh`.
 

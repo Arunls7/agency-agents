@@ -4,10 +4,12 @@
 #
 #   0 prérequis · 1 sauvegarde · 2 dépôt agency-agents · 3 agents FR ·
 #   4 commandes /slash et fichiers de référence · 5 claude-mem (mémoire locale) ·
-#   6 application Agency Agents (optionnel) · 7 premiers pas et tableau de bord
+#   6 application Agence IA (tableau de bord et discussion avec les agents) ·
+#   7 application Agency Agents (optionnel) · 8 premiers pas
 #
-# Ne touche qu'à ~/.claude, ~/.claude-mem et ~/tools (et, si vous l'acceptez, installe
-# l'application Agency Agents avec Homebrew). Pas de sudo.
+# Ne touche qu'à ~/.claude, ~/.claude-mem et ~/tools. Seulement si vous l'acceptez :
+# l'icône « Agence IA » dans ~/Applications (macOS) ou le menu des applications (Linux),
+# et l'application Agency Agents installée avec Homebrew. Pas de sudo.
 # Demande confirmation avant d'écraser un fichier ou d'installer quoi que ce soit.
 #
 # Installation :
@@ -38,7 +40,7 @@ for arg in "$@"; do
     --avec-originaux) WITH_ORIGINALS=true ;;
     --sans-mem) WITH_MEM=false ;;
     --maj) UPDATE=true ;;  # utilisé par mettre-a-jour.sh : remplace les agents -fr sans demander
-    -h|--help) sed -n '2,20p' "$0"; exit 0 ;;
+    -h|--help) sed -n '2,23p' "$0"; exit 0 ;;
     *) echo "Option inconnue : $arg (voir --help)" >&2; exit 2 ;;
   esac
 done
@@ -316,7 +318,95 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-step "Étape 6 — Application Agency Agents (optionnel)"
+step "Étape 6 — Application Agence IA"
+info "Une fenêtre à part pour discuter avec chaque agent (réponses au fil de l'eau, historique,"
+info "export) et consulter le tableau de bord. Elle passe par Claude Code et votre abonnement,"
+info "comme dans le terminal ; les discussions restent sur cet ordinateur (~/.claude/agence-ia-fr)."
+# Chemins absolus de node et claude : lancée depuis le Dock, l'application n'a pas le PATH du terminal.
+mkdir -p "$REF_DIR"
+printf 'NODE_BIN=%s\nCLAUDE_BIN=%s\nAGENCE_DIR=%s\n' "$(command -v node)" "$(command -v claude)" "${HOME}/Agence" >"${REF_DIR}/app.conf"
+ok "réglages de l'application : ~/.claude/agence-ia-fr/app.conf"
+navigateur=""
+case "$(uname -s)" in
+  Darwin)
+    for b in "Google Chrome" "Microsoft Edge" "Brave Browser" "Chromium" "Vivaldi"; do
+      [[ -d "/Applications/${b}.app" || -d "${HOME}/Applications/${b}.app" ]] && { navigateur="$b"; break; }
+    done
+    APP_BUNDLE="${HOME}/Applications/Agence IA.app"
+    if [[ -f "${REF_DIR}/app-bundle-par-le-kit" && -d "$APP_BUNDLE" ]]; then
+      creer_bundle=true  # créée par le kit lors d'une installation précédente : mise à jour
+    elif [[ -e "$APP_BUNDLE" ]]; then
+      creer_bundle=false
+      ask "« ${APP_BUNDLE} » existe déjà et n'a pas été créée par le kit. La remplacer ?" && creer_bundle=true
+    else
+      creer_bundle=false
+      ask_oui "Ajouter l'icône « Agence IA » dans ~/Applications (Launchpad, Dock, Spotlight) ?" && creer_bundle=true
+    fi
+    if $creer_bundle; then
+      tmp="${REF_DIR}/Agence IA.app"
+      rm -rf "$tmp" "${REF_DIR}/icone.iconset"
+      mkdir -p "${tmp}/Contents/MacOS" "${tmp}/Contents/Resources" "${REF_DIR}/icone.iconset"
+      cat >"${tmp}/Contents/Info.plist" <<'PLIST'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleName</key><string>Agence IA</string>
+  <key>CFBundleDisplayName</key><string>Agence IA</string>
+  <key>CFBundleIdentifier</key><string>fr.agence-ia.kit</string>
+  <key>CFBundlePackageType</key><string>APPL</string>
+  <key>CFBundleExecutable</key><string>agence-ia</string>
+  <key>CFBundleIconFile</key><string>icone</string>
+  <key>CFBundleShortVersionString</key><string>1.0</string>
+  <key>CFBundleVersion</key><string>1</string>
+  <key>LSMinimumSystemVersion</key><string>11.0</string>
+</dict>
+</plist>
+PLIST
+      printf '#!/bin/bash\nexec /bin/bash %q\n' "${KIT_DIR}/app.sh" >"${tmp}/Contents/MacOS/agence-ia"
+      chmod +x "${tmp}/Contents/MacOS/agence-ia"
+      icone_ok=true
+      for t in 16 32 128 256 512; do
+        sips -z "$t" "$t" "${KIT_DIR}/app/icone.png" --out "${REF_DIR}/icone.iconset/icon_${t}x${t}.png" >/dev/null 2>&1 || icone_ok=false
+        sips -z $((t * 2)) $((t * 2)) "${KIT_DIR}/app/icone.png" --out "${REF_DIR}/icone.iconset/icon_${t}x${t}@2x.png" >/dev/null 2>&1 || icone_ok=false
+      done
+      { $icone_ok && iconutil -c icns "${REF_DIR}/icone.iconset" -o "${tmp}/Contents/Resources/icone.icns"; } \
+        || warn "icône non générée (sips/iconutil) : l'application aura l'icône par défaut."
+      rm -rf "${REF_DIR}/icone.iconset"
+      mkdir -p "${HOME}/Applications"
+      rm -rf "$APP_BUNDLE"
+      mv "$tmp" "$APP_BUNDLE"
+      touch "${REF_DIR}/app-bundle-par-le-kit"
+      /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f "$APP_BUNDLE" >/dev/null 2>&1 || true
+      ok "« Agence IA » ajoutée : ${APP_BUNDLE} (Launchpad, Spotlight ; glissez-la dans le Dock)"
+    else
+      info "icône non ajoutée. L'application s'ouvre aussi avec : bash ${KIT_DIR}/app.sh"
+    fi
+    ;;
+  Linux)
+    for b in google-chrome google-chrome-stable chromium chromium-browser microsoft-edge brave-browser; do
+      command -v "$b" >/dev/null 2>&1 && { navigateur="$b"; break; }
+    done
+    DESKTOP_FILE="${HOME}/.local/share/applications/agence-ia.desktop"
+    if [[ -f "${REF_DIR}/app-menu-par-le-kit" ]] || ask_oui "Ajouter « Agence IA » au menu des applications (${DESKTOP_FILE}) ?"; then
+      mkdir -p "$(dirname "$DESKTOP_FILE")"
+      printf '[Desktop Entry]\nType=Application\nName=Agence IA\nComment=Discussion avec les agents et tableau de bord du kit agence-ia-fr\nExec=bash "%s"\nIcon=%s\nTerminal=false\nCategories=Office;\n' \
+        "${KIT_DIR}/app.sh" "${KIT_DIR}/app/icone.png" >"$DESKTOP_FILE"
+      touch "${REF_DIR}/app-menu-par-le-kit"
+      ok "« Agence IA » ajoutée au menu des applications"
+    else
+      info "non ajoutée au menu. L'application s'ouvre aussi avec : bash ${KIT_DIR}/app.sh"
+    fi
+    ;;
+esac
+if [[ -n "$navigateur" ]]; then
+  ok "fenêtre d'application ouverte avec ${navigateur} (sans barre d'adresse)"
+else
+  info "Chrome, Edge ou Brave non trouvé : l'application s'ouvrira dans un onglet du navigateur par défaut."
+fi
+
+# ---------------------------------------------------------------------------
+step "Étape 7 — Application Agency Agents (optionnel)"
 info "Application de bureau du projet d'origine : parcourt le catalogue anglais (232 agents)"
 info "et l'installe en un clic. Elle ne connaît pas les agents -fr : n'installez pas tout le catalogue,"
 info "sinon Claude risque de choisir des versions anglaises."
@@ -338,18 +428,17 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-step "Étape 7 — Premiers pas dans Claude Code"
-info "1. Créez un dossier pour l'agence (ex. mkdir ~/Agence && cd ~/Agence), lancez claude,"
-info "   puis tapez /configurer-agence : une dizaine de questions pour décrire vos offres et tarifs."
-info "2. Tapez /agents : les agents en -fr doivent apparaître."
-info "3. Test : /decouverte dirigeant d'un cabinet comptable de 8 personnes"
-info "   Attendu : réponse en français, vouvoiement, contexte cabinet comptable."
-info "4. Vous ne savez pas quel agent utiliser ? /agence suivi de votre demande."
-info "5. Tableau de bord : bash ${KIT_DIR}/tableau-de-bord.sh"
+step "Étape 8 — Premiers pas"
+info "1. Ouvrez l'application Agence IA, puis « Créer la fiche » : le bras droit vous pose une"
+info "   dizaine de questions sur vos offres et vos tarifs et écrit ~/Agence/CLAUDE.md."
+info "   (Dans le terminal : mkdir ~/Agence && cd ~/Agence && claude, puis /configurer-agence.)"
+info "2. Discutez avec un agent, ou avec le bras droit si vous ne savez pas lequel choisir."
+info "3. Dans le terminal, /agents liste les agents -fr et /agence oriente votre demande."
+info "4. Application : bash ${KIT_DIR}/app.sh   ·   Tableau de bord seul : bash ${KIT_DIR}/tableau-de-bord.sh"
 echo
 ok "Terminé. Sauvegarde : $BACKUP_DIR"
 info "Annuler       : bash ${KIT_DIR}/annuler.sh"
 info "Mettre à jour : bash ${KIT_DIR}/mettre-a-jour.sh"
-if ask_oui "Ouvrir le tableau de bord maintenant ?"; then
-  bash "${KIT_DIR}/tableau-de-bord.sh" || warn "tableau de bord non généré (voir ci-dessus)."
+if ! $UPDATE && ask_oui "Ouvrir l'application Agence IA maintenant ?"; then
+  bash "${KIT_DIR}/app.sh" || warn "l'application ne s'est pas ouverte (voir ci-dessus)."
 fi

@@ -5,16 +5,17 @@
 // Usage : node tableau-de-bord.mjs <dossier-du-kit> [<dossier-de-l-agence>]
 // Écrit ~/.claude/agence-ia-fr/tableau-de-bord.html (page autonome, aucune
 // ressource externe) et affiche son chemin. Lecture seule partout ailleurs.
+//
+// Importé par app/serveur.mjs, genererPage({ jeton }) produit la même page en
+// mode application : vue Discussion, boutons « Discuter », app.js et app.css.
 
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
-const KIT_DIR = path.resolve(process.argv[2] || path.join(path.dirname(fileURLToPath(import.meta.url)), '..'));
 const HOME = os.homedir();
-const AGENCE_DIR = path.resolve(process.argv[3] || path.join(HOME, 'Agence'));
 const CLAUDE_DIR = path.join(HOME, '.claude');
 const REF_DIR = path.join(CLAUDE_DIR, 'agence-ia-fr');
 const OUT = path.join(REF_DIR, 'tableau-de-bord.html');
@@ -30,6 +31,31 @@ const DOMAINES = [
   ['Conformité et organisation', ['automation-governance-architect-fr', 'data-privacy-officer-fr', 'support-legal-compliance-checker-fr', 'juriste-contrats-fr', 'specialized-chief-of-staff-fr']],
 ];
 const AUTRES = 'Autres';
+
+// Nom court affiché pour chaque agent (le nom technique reste celui de Claude Code).
+const TITRES = {
+  'specialized-chief-of-staff-fr': 'Bras droit',
+  'sales-discovery-coach-fr': 'Découverte commerciale', 'sales-outbound-strategist-fr': 'Prospection',
+  'sales-proposal-strategist-fr': 'Propositions et devis', 'sales-offer-lead-gen-strategist-fr': 'Offres et acquisition',
+  'sales-engineer-fr': 'Avant-vente', 'specialized-pricing-analyst-fr': 'Tarifs',
+  'marketing-linkedin-content-creator-fr': 'LinkedIn', 'marketing-seo-specialist-fr': 'SEO',
+  'marketing-email-strategist-fr': 'E-mailing', 'paid-media-paid-social-strategist-fr': 'Pub Meta et LinkedIn',
+  'paid-media-ppc-strategist-fr': 'Google Ads', 'paid-media-tracking-specialist-fr': 'Mesure des campagnes',
+  'paid-media-creative-strategist-fr': 'Créations publicitaires', 'contenu-video-ia-fr': 'Vidéos et visuels IA',
+  'avis-reputation-locale-fr': 'Avis et réputation locale',
+  'engineering-ai-engineer-fr': 'Ingénieur IA', 'engineering-multi-agent-systems-architect-fr': 'Architecte multi-agents',
+  'specialized-mcp-builder-fr': 'Connecteurs MCP', 'specialized-workflow-architect-fr': 'Workflows',
+  'engineering-rag-pipeline-engineer-fr': 'Assistants documentaires (RAG)',
+  'engineering-voice-ai-integration-engineer-fr': 'Standard téléphonique IA', 'engineering-prompt-engineer-fr': 'Prompts',
+  'project-management-project-shepherd-fr': 'Chef de projet', 'testing-reality-checker-fr': 'Recette',
+  'engineering-it-service-manager-fr': 'Maintenance et support', 'customer-success-manager-fr': 'Fidélisation clients',
+  'chief-financial-officer-fr': 'DAF', 'legal-billing-time-tracking-fr': 'Facturation et temps',
+  'grant-writer-fr': 'Aides et financements', 'partenaires-prescripteurs-fr': 'Partenaires et prescripteurs',
+  'business-strategist-fr': 'Stratégie', 'product-manager-fr': 'Offres packagées', 'veille-marche-ia-fr': 'Veille marché',
+  'automation-governance-architect-fr': 'Gouvernance des automatisations', 'data-privacy-officer-fr': 'RGPD',
+  'support-legal-compliance-checker-fr': 'Conformité réglementaire', 'juriste-contrats-fr': 'Contrats',
+};
+const titreDe = nom => TITRES[nom] || nom.replace(/-fr$/, '').replace(/-/g, ' ');
 
 // ---------------------------------------------------------------------------
 // Lecture
@@ -62,6 +88,12 @@ function etat(source, installe) {
   return mtime(source) > mtime(installe) ? 'obsolete' : 'modifie';
 }
 
+const KIT_PAR_DEFAUT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
+
+export async function genererPage({ kitDir = KIT_PAR_DEFAUT, agenceDir = path.join(HOME, 'Agence'), jeton = null } = {}) {
+const KIT_DIR = path.resolve(kitDir);
+const AGENCE_DIR = path.resolve(agenceDir);
+const APP = Boolean(jeton);
 const domaineDe = new Map();
 DOMAINES.forEach(([nom, liste]) => liste.forEach(a => domaineDe.set(a, nom)));
 const agents = listeMd(path.join(KIT_DIR, 'agents')).map(f => {
@@ -69,6 +101,7 @@ const agents = listeMd(path.join(KIT_DIR, 'agents')).map(f => {
   const nom = fm.name || f.replace(/\.md$/, '');
   return {
     nom,
+    titre: titreDe(nom),
     emoji: fm.emoji || '•',
     description: fm.description || '',
     domaine: domaineDe.get(nom) || AUTRES,
@@ -179,6 +212,7 @@ function infoApp() {
   return r.status === 0 ? 'installee' : 'absente';
 }
 const app = infoApp();
+const iconeApp = fs.existsSync(path.join(REF_DIR, 'app-bundle-par-le-kit')) || fs.existsSync(path.join(REF_DIR, 'app-menu-par-le-kit'));
 
 // Activité : chaque sauvegarde correspond à une installation ou une mise à jour.
 const activite = (() => {
@@ -342,11 +376,11 @@ const vueAgents = `
 </div>
 <div class="grille">
   ${[...agents].sort((x, y) => domainesPresents.indexOf(x.domaine) - domainesPresents.indexOf(y.domaine) || x.nom.localeCompare(y.nom)).map(a => `
-  <article class="agent" data-domaine="${esc(a.domaine)}" data-texte="${esc(`${a.nom} ${a.description} ${a.commandes.join(' ')} ${a.domaine}`.toLowerCase())}">
-    <header><span class="emoji" aria-hidden="true">${esc(a.emoji)}</span><code>${esc(a.nom)}</code></header>
+  <article class="agent" data-domaine="${esc(a.domaine)}" data-texte="${esc(`${a.titre} ${a.nom} ${a.description} ${a.commandes.join(' ')} ${a.domaine}`.toLowerCase())}">
+    <header><span class="emoji" aria-hidden="true">${esc(a.emoji)}</span><div class="noms"><b>${esc(a.titre)}</b><code>${esc(a.nom)}</code></div></header>
     <div class="meta"><span class="carre" style="background:var(${varDomaine(a.domaine)})"></span>${esc(a.domaine)} ${badge(a.etat)}</div>
     <p>${esc(a.description)}</p>
-    <footer>${a.commandes.length ? a.commandes.map(c => `<span class="puce">${esc(c)}</span>`).join('') : `<span class="puce discrete">« Utilise ${esc(a.nom)} pour… »</span>`}</footer>
+    <footer>${a.commandes.length ? a.commandes.map(c => `<span class="puce">${esc(c)}</span>`).join('') : `<span class="puce discrete">« Utilise ${esc(a.nom)} pour… »</span>`}${APP ? `<button type="button" class="discuter" data-agent="${esc(a.nom)}">Discuter</button>` : ''}</footer>
   </article>`).join('')}
 </div>
 <p class="vide cache" id="aucun">Aucun agent ne correspond.</p>`;
@@ -386,10 +420,12 @@ const vueOutils = carte('Outils', `
     ${memoire.installe
       ? ligneOutil(memoire.actif ? 'Actif' : 'Arrêté', memoire.actif ? '--good' : '--warning', 'claude-mem (mémoire)', `${memoire.actif ? `Visionneuse : <a href="http://127.0.0.1:${memoire.port}">http://127.0.0.1:${memoire.port}</a>` : 'Démarrer : <code>npx claude-mem start</code>'}. Fournisseur : ${esc(memoire.fournisseur)}${memoire.fournisseur === 'claude' ? ' (local, consomme votre quota Claude)' : ''} · cloud ${memoire.cloud ? 'activé' : 'désactivé'} · publicités ${memoire.pubCachee ? 'masquées' : 'affichées'}. Retirer : <code>npx claude-mem uninstall</code>.`)
       : ligneOutil('Option', '--neutre', 'claude-mem (mémoire)', 'Non installé : Claude Code garde sa mémoire native et votre <code>CLAUDE.md</code>.')}
+    ${ligneOutil(APP ? 'Ouverte' : iconeApp ? 'Installée' : 'Option', APP || iconeApp ? '--good' : '--neutre', 'Application Agence IA', `Discussion avec les agents et ce tableau de bord, dans sa propre fenêtre. ${iconeApp ? 'Icône dans vos Applications.' : 'Ouvrir : <code>bash ~/tools/agency-agents/agence-ia-fr/app.sh</code>.'} Discussions enregistrées dans <code>~/.claude/agence-ia-fr/discussions</code>.`)}
     ${ligneOutil(app === 'installee' ? 'Installée' : 'Option', app === 'installee' ? '--good' : '--neutre', 'Application Agency Agents', `Catalogue anglais d'origine (${app === 'installee' ? 'installée' : 'non installée'}) : elle ne connaît pas les agents <code>-fr</code>. Sur Mac : <code>brew install --cask msitarzewski/agency-agents/agency-agents</code> · <a href="https://agencyagents.app">agencyagents.app</a>.`)}
   </ul>
   <h3>Commandes utiles</h3>
   <ul class="cmds">
+    <li><span>Ouvrir l'application Agence IA</span><code>bash ~/tools/agency-agents/agence-ia-fr/app.sh</code></li>
     <li><span>Mettre à jour le kit</span><code>bash ~/tools/agency-agents/agence-ia-fr/mettre-a-jour.sh</code></li>
     <li><span>Régénérer ce tableau de bord</span><code>bash ~/tools/agency-agents/agence-ia-fr/tableau-de-bord.sh</code></li>
     <li><span>Tout annuler</span><code>bash ~/tools/agency-agents/agence-ia-fr/annuler.sh</code></li>
@@ -413,14 +449,57 @@ const NAV = [
   ['outils', 'Outils', '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/>'],
   ['activite', 'Activité', '<path d="M3 12h4l3-8 4 16 3-8h4"/>'],
 ];
-const VUES = { tableau: vueTableau, agents: vueAgents, commandes: vueCommandes, registre: vueRegistre, outils: vueOutils, activite: vueActivite };
+if (APP) NAV.unshift(['discussion', 'Discussion', '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12z"/><path d="M8.5 11h.01M12 11h.01M15.5 11h.01"/>']);
+const vueDiscussion = `
+<div class="disc">
+  <aside class="disc-liste" aria-label="Discussions">
+    <button type="button" class="disc-nouvelle" id="disc-nouvelle">${icone('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>')}Nouvelle discussion</button>
+    <input type="search" class="disc-filtre" id="disc-filtre" placeholder="Rechercher une discussion" aria-label="Rechercher une discussion">
+    <nav class="disc-historique" id="disc-historique" aria-label="Historique"></nav>
+  </aside>
+  <section class="disc-zone">
+    <header class="disc-tete">
+      <label class="disc-agent"><span class="sr">Agent</span><select id="disc-agent"></select></label>
+      <span class="disc-titre" id="disc-titre"></span>
+      <div class="disc-actions">
+        <button type="button" id="disc-exporter" title="Exporter la discussion (Markdown)" aria-label="Exporter la discussion">${icone('<path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>')}</button>
+        <button type="button" id="disc-supprimer" title="Supprimer la discussion" aria-label="Supprimer la discussion">${icone('<path d="M4 7h16"/><path d="M10 11v6M14 11v6"/><path d="M6 7l1 13h10l1-13"/><path d="M9 7V4h6v3"/>')}</button>
+      </div>
+    </header>
+    <div class="disc-banniere" id="disc-banniere" role="status" hidden></div>
+    <div class="fil" id="disc-fil" aria-live="polite"></div>
+    <div class="disc-bas">
+      <form class="composer" id="disc-form">
+        <textarea id="disc-texte" rows="1" placeholder="Écrivez votre demande…" aria-label="Votre message"></textarea>
+        <div class="composer-pied">
+          <label class="interrupteur" title="Sans cette option, l'agent peut lire vos fichiers et chercher sur le web, mais ne crée ni ne modifie aucun fichier.">
+            <input type="checkbox" id="disc-ecriture" role="switch"><span class="glissiere" aria-hidden="true"></span>
+            <span>Autoriser la création de fichiers dans <code>${esc(AGENCE_DIR.replace(HOME, '~'))}</code></span>
+          </label>
+          <button type="submit" id="disc-envoyer" class="envoyer" aria-label="Envoyer" title="Envoyer (Entrée)">${icone('<path d="M12 19V5"/><path d="m5 12 7-7 7 7"/>')}</button>
+        </div>
+      </form>
+      <p class="disc-aide">Entrée pour envoyer, Maj+Entrée pour aller à la ligne, Échap pour arrêter. Réponses générées par IA : relisez-les avant de les envoyer à un client.</p>
+    </div>
+  </section>
+</div>`;
+const VUES = { ...(APP ? { discussion: vueDiscussion } : {}), tableau: vueTableau, agents: vueAgents, commandes: vueCommandes, registre: vueRegistre, outils: vueOutils, activite: vueActivite };
+const donneesApp = APP ? {
+  jeton,
+  agence: AGENCE_DIR.replace(HOME, '~'),
+  agenceEtat: agence.etat,
+  agenceExiste: fs.existsSync(AGENCE_DIR),
+  domaines: domainesPresents.map(d => ({ nom: d, couleur: varDomaine(d) })),
+  agents: agents.map(a => ({ nom: a.nom, titre: a.titre, emoji: a.emoji, domaine: a.domaine, description: a.description, installe: a.etat !== 'manquant',
+    exemples: commandes.filter(c => c.agents.includes(a.nom)).map(c => ({ commande: c.nom, description: c.description, indice: c.exemple })) })),
+} : null;
 
 const html = `<!doctype html>
 <html lang="fr" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tableau de bord de l'agence</title>
+<title>${APP ? 'Agence IA' : 'Tableau de bord de l\'agence'}</title>
 <style>
 :root[data-theme="dark"] {
   color-scheme: dark;
@@ -531,7 +610,8 @@ main { padding: 22px; min-width: 0; }
 .filtre b { color: var(--muted); font-weight: 500; } .filtre.actif { background: var(--carte-2); color: var(--ink); border-color: var(--muted); }
 .grille { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 12px; }
 .agent { background: var(--carte); border: 1px solid var(--anneau); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
-.agent header { display: flex; align-items: center; gap: 8px; min-width: 0; } .agent header code { font-size: 12px; }
+.agent header { display: flex; align-items: center; gap: 10px; min-width: 0; } .agent header code { font-size: 11.5px; color: var(--muted); background: none; padding: 0; }
+.agent .noms { display: grid; min-width: 0; } .agent .noms b { font-size: 14px; font-weight: 650; }
 .agent .emoji { font-size: 18px; }
 .agent .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; }
 .agent p { margin: 0; font-size: 12.5px; color: var(--ink-2); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
@@ -577,6 +657,7 @@ td .indice { display: block; color: var(--muted); font-size: 11.5px; margin-top:
 }
 @media (forced-colors: active) { .seg, .arc { forced-color-adjust: none; } }
 </style>
+${APP ? '<link rel="stylesheet" href="/app.css">\n<link rel="icon" href="/icone.png">' : ''}
 </head>
 <body>
 <div class="fenetre">
@@ -594,7 +675,7 @@ td .indice { display: block; color: var(--muted); font-size: 11.5px; margin-top:
     </aside>
     <main>${Object.entries(VUES).map(([id, contenu]) => `<div class="vue" id="vue-${id}" data-titre="${esc(NAV.find(n => n[0] === id)[1])}">${contenu}</div>`).join('')}</main>
   </div>
-  <p class="pied">Généré le ${esc(genere)} depuis <code>${esc(KIT_DIR)}</code> · page locale, aucune donnée envoyée.</p>
+  <p class="pied">${APP ? `Application locale · ${esc(KIT_DIR)} · les discussions passent par Claude Code, comme dans le terminal.` : `Généré le ${esc(genere)} depuis <code>${esc(KIT_DIR)}</code> · page locale, aucune donnée envoyée.`}</p>
 </div>
 <div id="bulle" role="tooltip"></div>
 <script>
@@ -607,8 +688,9 @@ td .indice { display: block; color: var(--muted); font-size: 11.5px; margin-top:
   });
 
   function afficher() {
-    var id = (location.hash || '#tableau').slice(1);
-    if (!document.getElementById('vue-' + id)) id = 'tableau';
+    var defaut = document.getElementById('vue-discussion') ? 'discussion' : 'tableau';
+    var id = (location.hash || '#' + defaut).slice(1);
+    if (!document.getElementById('vue-' + id)) id = defaut;
     document.querySelectorAll('.vue').forEach(function (v) { v.classList.toggle('active', v.id === 'vue-' + id); });
     document.querySelectorAll('.laterale nav a').forEach(function (a) {
       if (a.dataset.vue === id) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
@@ -692,10 +774,20 @@ td .indice { display: block; color: var(--muted); font-size: 11.5px; margin-top:
   afficher();
 })();
 </script>
+${APP ? `<script>window.AGENCE = ${JSON.stringify(donneesApp).replace(/</g, '\\u003c')};</script>\n<script src="/app.js"></script>` : ''}
 </body>
 </html>
 `;
 
-fs.mkdirSync(REF_DIR, { recursive: true });
-fs.writeFileSync(OUT, html);
-console.log(OUT);
+return html;
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
+  const html = await genererPage({
+    kitDir: process.argv[2] || KIT_PAR_DEFAUT,
+    agenceDir: process.argv[3] || path.join(HOME, 'Agence'),
+  });
+  fs.mkdirSync(REF_DIR, { recursive: true });
+  fs.writeFileSync(OUT, html);
+  console.log(OUT);
+}

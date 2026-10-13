@@ -3,7 +3,8 @@
 # annuler.sh — défait setup-agence.sh.
 #   1. désinstalle claude-mem (vos souvenirs dans ~/.claude-mem sont conservés)
 #   2. supprime ce que le kit a installé : agents (-fr et originaux éventuels),
-#      commandes /slash et ~/.claude/agence-ia-fr (registre, modèle de CLAUDE.md)
+#      commandes /slash, application Agence IA (icône, discussions) et
+#      ~/.claude/agence-ia-fr (registre, modèle de CLAUDE.md)
 #   3. restaure agents/, commands/, settings.json (et, si vous le voulez, plugins/) depuis la sauvegarde
 #   Votre CLAUDE.md d'agence (créé par /configurer-agence) n'est jamais touché.
 #
@@ -64,7 +65,21 @@ if [[ -f "${REF_DIR}/app-installee-par-le-kit" ]] && command -v brew >/dev/null 
   && ask "Désinstaller l'application Agency Agents (installée par le kit) ?"; then
   brew uninstall --cask agency-agents && echo "  application désinstallée" || echo "  désinstallation échouée : voir ci-dessus"
 fi
-if [[ -d "$REF_DIR" ]] && ask "Supprimer ~/.claude/agence-ia-fr (registre, modèle, tableau de bord, propres au kit) ?"; then
+# Application Agence IA : serveur local, icône dans ~/Applications ou entrée de menu.
+[[ -f "${REF_DIR}/app.json" ]] && bash "${KIT_DIR}/app.sh" --arreter >/dev/null 2>&1 || true
+APP_BUNDLE="${HOME}/Applications/Agence IA.app"
+if [[ -f "${REF_DIR}/app-bundle-par-le-kit" && -d "$APP_BUNDLE" ]] && ask "Supprimer l'application Agence IA (~/Applications/Agence IA.app) ?"; then
+  rm -rf -- "$APP_BUNDLE"
+  echo "  application supprimée"
+fi
+DESKTOP_FILE="${HOME}/.local/share/applications/agence-ia.desktop"
+if [[ -f "${REF_DIR}/app-menu-par-le-kit" && -f "$DESKTOP_FILE" ]] && ask "Retirer Agence IA du menu des applications ?"; then
+  rm -f -- "$DESKTOP_FILE"
+  echo "  entrée de menu retirée"
+fi
+n_disc=0
+[[ -d "${REF_DIR}/discussions" ]] && n_disc=$(find "${REF_DIR}/discussions" -name '*.json' | wc -l | tr -d ' ')
+if [[ -d "$REF_DIR" ]] && ask "Supprimer ~/.claude/agence-ia-fr (registre, modèle, tableau de bord et ${n_disc} discussion(s) de l'application) ?"; then
   rm -rf -- "$REF_DIR"
   echo "  supprimé"
 fi

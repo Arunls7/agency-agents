@@ -11,7 +11,10 @@ Tout est **adapté à la France** :
 
 Les agents viennent de [The Agency](https://github.com/msitarzewski/agency-agents) (33 adaptés) ou ont été créés pour ce kit (5). Ils ont tous été relus sous trois angles : fidélité, exactitude juridique et qualité du français.
 
-Le kit installe aussi [claude-mem](https://github.com/thedotmack/claude-mem) en **mode local**. C'est une mémoire qui persiste d'une session à l'autre, sans compte ni cloud.
+Le kit installe aussi :
+
+- **l'application Agence IA** : une fenêtre à part pour discuter avec chaque agent et suivre l'installation, avec son icône dans vos Applications ;
+- [claude-mem](https://github.com/thedotmack/claude-mem) en **mode local** : une mémoire qui persiste d'une session à l'autre, sans compte ni cloud.
 
 ## Avant de commencer
 
@@ -37,12 +40,13 @@ Le script :
 4. copie les agents `-fr` dans `~/.claude/agents/` et les commandes dans `~/.claude/commands/`. Il demande toujours avant d'écraser un fichier ;
 5. installe le registre des faits datés et le modèle de `CLAUDE.md` dans `~/.claude/agence-ia-fr/`, puis propose d'ajouter à `~/.claude/settings.json` la règle `Read(~/.claude/agence-ia-fr/**)`. Sans elle, Claude vous demande l'autorisation chaque fois qu'un agent consulte le registre ;
 6. installe claude-mem en local, sans télémétrie et sans les publicités de l'offre payante ;
-7. propose d'installer l'application de bureau Agency Agents (sur Mac, avec Homebrew) ;
-8. propose d'ouvrir le tableau de bord.
+7. prépare l'application Agence IA et propose d'ajouter son icône : `~/Applications/Agence IA.app` sur Mac (Launchpad, Spotlight, Dock), le menu des applications sous Linux ;
+8. propose d'installer l'application de bureau Agency Agents (sur Mac, avec Homebrew) ;
+9. propose d'ouvrir l'application Agence IA.
 
-Les questions sans risque (`git pull`, « Continuer ? », lecture du registre, ouverture du tableau de bord) sont à « oui » par défaut : Entrée suffit. Celles qui écrasent un fichier ou installent un logiciel sont à « non » par défaut : tapez `o` pour accepter.
+Les questions sans risque (`git pull`, « Continuer ? », lecture du registre, icône de l'application, ouverture de l'application) sont à « oui » par défaut : Entrée suffit. Celles qui écrasent un fichier ou installent un logiciel sont à « non » par défaut : tapez `o` pour accepter.
 
-Il ne touche qu'à `~/.claude`, `~/.claude-mem` et `~/tools`, sauf si vous acceptez que claude-mem installe Bun ou uv (voir plus bas). Il n'utilise jamais sudo.
+Il ne touche qu'à `~/.claude`, `~/.claude-mem` et `~/tools`. Exceptions, seulement si vous les acceptez : l'icône de l'application (voir l'étape 7) et l'installation de Bun ou uv par claude-mem (voir plus bas). Il n'utilise jamais sudo.
 
 | Option | Effet |
 |---|---|
@@ -51,13 +55,43 @@ Il ne touche qu'à `~/.claude`, `~/.claude-mem` et `~/tools`, sauf si vous accep
 
 ## Premiers pas
 
-1. **Décrivez votre agence, une seule fois.** Créez un dossier de travail (par exemple `mkdir ~/Agence && cd ~/Agence`), lancez `claude`, puis tapez `/configurer-agence`. Une dizaine de questions servent à remplir un `CLAUDE.md` : offres, tarifs HT, cibles, ton, signature. Les agents s'en servent ensuite pour chaque devis, message ou contenu.
-2. **Essayez une commande** : `/decouverte dirigeant d'un cabinet comptable de 8 personnes, Lyon`.
-3. **Vous ne savez pas quoi utiliser ?** `/agence` suivi de votre demande en une phrase : la demande est confiée au bon agent.
+1. **Décrivez votre agence, une seule fois.** Ouvrez l'application Agence IA et cliquez sur **Créer la fiche**. Le bras droit vous pose une dizaine de questions, puis écrit `~/Agence/CLAUDE.md` : offres, tarifs HT, cibles, ton, signature. Les agents s'en servent ensuite pour chaque devis, message ou contenu. Dans le terminal, c'est `mkdir ~/Agence && cd ~/Agence`, puis `claude` et `/configurer-agence`.
+2. **Discutez avec un agent** : choisissez-le en haut de la discussion, ou partez d'une des suggestions.
+3. **Vous ne savez pas lequel choisir ?** Écrivez au **bras droit** : il répond lui-même ou confie la demande au bon agent. Dans le terminal, c'est `/agence` suivi de votre demande en une phrase.
 
-Ouvrez toujours Claude Code dans ce dossier pour que le contexte de l'agence soit pris en compte.
+Dans le terminal, ouvrez toujours Claude Code dans le dossier de l'agence pour que son contexte soit pris en compte. L'application le fait pour vous.
+
+## L'application Agence IA
+
+Ouvrez **Agence IA** depuis le Launchpad, Spotlight ou le Dock (glissez-y l'icône). Vous pouvez aussi lancer :
+
+```bash
+bash ~/tools/agency-agents/agence-ia-fr/app.sh
+```
+
+L'application s'ouvre dans sa propre fenêtre, sans barre d'adresse. Elle a besoin de Google Chrome, Microsoft Edge, Brave ou Chromium. Sans eux, elle s'ouvre dans un onglet de votre navigateur.
+
+**La discussion** (premier onglet) :
+
+- **Choix de l'agent** : liste par domaine en haut de la discussion, bouton **Discuter** sur chaque fiche de l'onglet Agents, ou suggestions tirées des commandes de l'agent.
+- **Réponses au fil de l'eau**, mises en forme (titres, listes, tableaux), avec un bouton **Copier**. Échap ou le bouton carré arrête une réponse.
+- **Actions visibles** : les fichiers lus, les recherches web et les délégations à un autre agent s'affichent au-dessus de la réponse.
+- **Création de fichiers** : désactivée par défaut, l'agent lit et cherche sans rien modifier. Activez **Autoriser la création de fichiers** pour qu'il écrive un devis ou une note, uniquement dans `~/Agence`.
+- **Historique** : chaque discussion garde sa mémoire. Elle est rangée par date, consultable, exportable en Markdown ou supprimable.
+
+**Ce qu'il faut savoir** :
+
+- **Quota** : les réponses passent par Claude Code (`claude -p --agent …`) et décomptent de votre abonnement, comme dans le terminal.
+- **Confidentialité** : les discussions restent sur votre ordinateur, dans `~/.claude/agence-ia-fr/discussions/`. Un petit serveur local fait le lien entre la fenêtre et Claude Code. Il n'écoute que sur `127.0.0.1` et exige un jeton aléatoire. Il s'arrête seul quelques minutes après la fermeture de la fenêtre.
+- **En cas de problème** :
+  - « Claude Code n'est pas connecté » : ouvrez le Terminal, tapez `claude`, puis `/login`.
+  - Le journal est dans `~/.claude/agence-ia-fr/app.log`.
+  - `bash …/app.sh --arreter` arrête le serveur.
+  - Les chemins de `node` et `claude` sont dans `~/.claude/agence-ia-fr/app.conf`.
 
 ## Le tableau de bord
+
+Il est dans l'application (onglet **Tableau de bord**). Pour une page autonome, sans serveur :
 
 ```bash
 bash ~/tools/agency-agents/agence-ia-fr/tableau-de-bord.sh
@@ -86,7 +120,7 @@ brew install --cask msitarzewski/agency-agents/agency-agents
 
 Sur Linux ou Windows, ou sans Homebrew, passez par la [page de téléchargement](https://github.com/msitarzewski/agency-agents-app/releases/latest).
 
-L'application ne connaît pas les agents `-fr` : pour eux, utilisez le tableau de bord ci-dessus. N'y installez pas tout le catalogue anglais, sinon Claude risque de choisir une version anglaise à la place d'un agent français. `annuler.sh` la désinstalle si c'est le kit qui l'a installée.
+L'application ne connaît pas les agents `-fr` : pour eux, utilisez l'application Agence IA. N'y installez pas tout le catalogue anglais, sinon Claude risque de choisir une version anglaise à la place d'un agent français. `annuler.sh` la désinstalle si c'est le kit qui l'a installée.
 
 ## Les commandes
 
@@ -234,7 +268,7 @@ bash ~/tools/agency-agents/agence-ia-fr/annuler.sh
 Ce que fait le script :
 
 - **Il désinstalle claude-mem**, en gardant vos souvenirs.
-- **Il supprime ce que le kit a installé** : agents, commandes, `~/.claude/agence-ia-fr` et la règle de lecture ajoutée à `settings.json`.
+- **Il supprime ce que le kit a installé** : agents, commandes, application Agence IA (icône, discussions), `~/.claude/agence-ia-fr` et la règle de lecture ajoutée à `settings.json`.
 - **Il restaure** vos agents, vos commandes et `settings.json` tels qu'ils étaient avant la toute première installation, même après plusieurs mises à jour.
 
 Votre `CLAUDE.md` d'agence n'est jamais touché. Le script demande confirmation à chaque étape.
@@ -263,7 +297,8 @@ Pour récupérer les nouveautés du dépôt d'origine, cliquez d'abord sur **Syn
 | `faits-dates.md` | registre des faits datés, sourcés et vérifiés |
 | `agency-team.txt` | identifiants des agents d'origine adaptés |
 | `setup-agence.sh` · `annuler.sh` · `mettre-a-jour.sh` | installation, retour en arrière, mise à jour |
-| `tableau-de-bord.sh` · `outils/tableau-de-bord.mjs` | tableau de bord local |
+| `app.sh` · `app/` | application Agence IA : lanceur, serveur local (`serveur.mjs`), interface de discussion, icône |
+| `tableau-de-bord.sh` · `outils/tableau-de-bord.mjs` | tableau de bord (page autonome, et dans l'application) |
 
 Ce dossier n'est pas une « division » d'agency-agents : l'installeur d'origine ne le parcourt pas, et il est exclu de `scripts/check-divisions.sh`.
 

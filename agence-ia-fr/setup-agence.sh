@@ -227,6 +227,30 @@ if [[ -f "${KIT_DIR}/faits-dates.md" ]]; then
 else
   warn "registre des faits datés absent du kit : les agents s'appuieront sur les sources officielles."
 fi
+# Le registre est hors du dossier de travail : sans règle explicite, Claude Code
+# demande l'autorisation de le lire à chaque consultation par un agent.
+READ_RULE='Read(~/.claude/agence-ia-fr/**)'
+if grep -qF "$READ_RULE" "${CLAUDE_DIR}/settings.json" 2>/dev/null; then
+  ok "lecture du registre déjà autorisée"
+elif ask "Autoriser les agents à lire ~/.claude/agence-ia-fr (registre, modèle) sans vous le demander à chaque fois ?"; then
+  if node -e '
+    const fs = require("fs"), p = process.argv[1], rule = process.argv[2];
+    let s = {};
+    if (fs.existsSync(p)) {
+      try { s = JSON.parse(fs.readFileSync(p, "utf8")); } catch (e) { process.exit(2); }
+    }
+    s.permissions = s.permissions || {};
+    s.permissions.allow = s.permissions.allow || [];
+    if (!s.permissions.allow.includes(rule)) s.permissions.allow.push(rule);
+    fs.writeFileSync(p, JSON.stringify(s, null, 2) + "\n");
+  ' "${CLAUDE_DIR}/settings.json" "$READ_RULE"; then
+    ok "règle ajoutée à ~/.claude/settings.json : $READ_RULE"
+  else
+    warn "settings.json n'est pas un JSON valide : règle non ajoutée (Claude demandera l'autorisation)."
+  fi
+else
+  info "règle non ajoutée : Claude demandera l'autorisation quand un agent lira le registre."
+fi
 
 # ---------------------------------------------------------------------------
 step "Étape 5 — claude-mem (mémoire locale)"

@@ -65,6 +65,19 @@ if [[ -d "$REF_DIR" ]] && ask "Supprimer ~/.claude/agence-ia-fr (registre et mod
   echo "  supprimé"
 fi
 
+# Règle de lecture du registre ajoutée par le kit dans settings.json.
+if [[ -f "${CLAUDE_DIR}/settings.json" ]] && grep -qF 'Read(~/.claude/agence-ia-fr/**)' "${CLAUDE_DIR}/settings.json"; then
+  node -e '
+    const fs = require("fs"), p = process.argv[1], rule = "Read(~/.claude/agence-ia-fr/**)";
+    const s = JSON.parse(fs.readFileSync(p, "utf8"));
+    if (s.permissions && Array.isArray(s.permissions.allow)) {
+      s.permissions.allow = s.permissions.allow.filter(r => r !== rule);
+    }
+    fs.writeFileSync(p, JSON.stringify(s, null, 2) + "\n");
+  ' "${CLAUDE_DIR}/settings.json" && echo "  règle de lecture du registre retirée de settings.json" \
+    || echo "  impossible de retirer la règle de settings.json (à faire à la main)"
+fi
+
 # 3. restauration des fichiers remplacés
 if [[ -d "${BACKUP_DIR}/agents" ]] && ask "Restaurer les agents tels qu'ils étaient avant (copie depuis la sauvegarde) ?"; then
   mkdir -p "$AGENTS_DIR"

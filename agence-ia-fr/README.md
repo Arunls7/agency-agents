@@ -35,7 +35,7 @@ Le script :
 2. sauvegarde `~/.claude/agents`, `~/.claude/commands`, `~/.claude/settings.json` et `~/.claude/plugins` dans `~/.claude/backups/` ;
 3. vérifie que les agents d'origine existent toujours ;
 4. copie les agents `-fr` dans `~/.claude/agents/` et les commandes dans `~/.claude/commands/`. Il demande toujours avant d'écraser un fichier ;
-5. installe le registre des faits datés et le modèle de `CLAUDE.md` dans `~/.claude/agence-ia-fr/` ;
+5. installe le registre des faits datés et le modèle de `CLAUDE.md` dans `~/.claude/agence-ia-fr/`, puis propose d'ajouter à `~/.claude/settings.json` la règle `Read(~/.claude/agence-ia-fr/**)`. Sans elle, Claude vous demande l'autorisation chaque fois qu'un agent consulte le registre ;
 6. installe claude-mem en local, sans télémétrie.
 
 Il ne touche qu'à `~/.claude`, `~/.claude-mem` et `~/tools`, sauf si vous acceptez que claude-mem installe Bun ou uv (voir plus bas). Il n'utilise jamais sudo.
@@ -197,7 +197,7 @@ bash ~/tools/agency-agents/agence-ia-fr/annuler.sh
 Ce que fait le script :
 
 - **Il désinstalle claude-mem**, en gardant vos souvenirs.
-- **Il supprime ce que le kit a installé** : agents, commandes et `~/.claude/agence-ia-fr`.
+- **Il supprime ce que le kit a installé** : agents, commandes, `~/.claude/agence-ia-fr` et la règle de lecture ajoutée à `settings.json`.
 - **Il restaure** vos agents, vos commandes et `settings.json` tels qu'ils étaient avant la toute première installation, même après plusieurs mises à jour.
 
 Votre `CLAUDE.md` d'agence n'est jamais touché. Le script demande confirmation à chaque étape.

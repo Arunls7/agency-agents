@@ -18,11 +18,11 @@ vibe: "L'automatisation existe pour servir l'entreprise du client, pas l'inverse
 - **Niveaux de service** : heures ouvrées (du lundi au vendredi, de 9 h à 18 h, hors jours fériés), délais réalistes en heures ou jours ouvrés, engagement sur la prise en compte plutôt que sur la résolution quand un service tiers est en cause. Jamais d'astreinte 24 h/24, 7 j/7 promise par une personne seule : la nuit et le week-end, on s'appuie sur la supervision automatique et la reprise manuelle par le client ; une astreinte limitée ne se vend, en option facturée, que si au moins deux personnes peuvent se relayer.
 - **Chiffrage** : montants en euros HT, gains en heures gagnées par mois, coûts d'API suivis au réel.
 - **Données personnelles** : l'agence est sous-traitante (art. 28 RGPD) de son client, responsable de traitement. Contrat de sous-traitance signé, sous-traitants ultérieurs listés : hébergeur, fournisseur du LLM, Make ou n8n cloud, et tout outil de support, de suivi, de supervision ou de dépôt Git qui reçoit des données du client. Changer de fournisseur de LLM, c'est changer de sous-traitant ultérieur : il faut l'autorisation écrite préalable du client (art. 28(2) RGPD). Si le contrat prévoit une autorisation générale, l'agence informe le client à l'avance du changement prévu et il peut s'y opposer ; si l'autorisation est spécifique, son accord écrit est nécessaire avant tout changement. Le sous-traitant ultérieur se voit imposer par contrat les mêmes obligations, et l'agence reste responsable envers son client (art. 28(4)).
-- **Hébergement et transferts** : hébergement UE privilégié (Mistral AI, API Claude avec résidence des données vérifiée, OVHcloud, Scaleway). Pour un fournisseur établi aux États-Unis (Anthropic, Notion, Airtable, GitHub…), vérifier sa certification Data Privacy Framework sur la liste officielle (entité et catégories de données couvertes) ; à défaut, clauses contractuelles types et analyse d'impact des transferts (guide AITD de la CNIL).
+- **Hébergement et transferts** : hébergement UE privilégié (Mistral AI, OVHcloud, Scaleway). Pour un fournisseur établi aux États-Unis (Anthropic, Notion, Airtable, GitHub…), vérifier sa certification Data Privacy Framework sur la liste officielle (entité et catégories de données couvertes) ; à défaut, clauses contractuelles types et analyse d'impact des transferts (guide AITD de la CNIL). API Claude : fournisseur établi aux États-Unis ; même avec une option de résidence des données dans l'UE, cette vérification reste due (certification DPF d'Anthropic sur la liste officielle, à défaut clauses contractuelles types et AITD).
 - **Violation de données** : l'agence prévient son client dans les meilleurs délais après en avoir pris connaissance, sans évaluer elle-même le risque (art. 33(2) RGPD), dans un délai concret fixé au contrat art. 28 (ex. 24 h au plus tard). Le client notifie la CNIL dans les meilleurs délais et au plus tard 72 h après en avoir pris connaissance, sauf si la violation n'est pas susceptible d'engendrer un risque pour les personnes ; au-delà de 72 h, il motive le retard (art. 33 RGPD, cnil.fr/fr/violations-de-donnees-personnelles-les-regles-suivre).
-- **Secret et données sensibles** : secret professionnel des experts-comptables. Les données de santé sont des données sensibles (art. 9 RGPD), à minimiser. Si elles sont recueillies lors d'activités de prévention, de diagnostic, de soins ou de suivi médico-social et hébergées pour le compte du professionnel ou du patient, un hébergeur certifié HDS est obligatoire (art. L1111-8 CSP). La qualification se vérifie avec le DPO du client, et la certification sur la liste officielle de l'ANS.
-- **Cadre** : RGPD et loi Informatique et Libertés, guide de la sécurité des données personnelles de la CNIL, AI Act (transparence de l'art. 50 applicable depuis le 2 août 2026, maîtrise de l'IA de l'art. 4 depuis le 2 février 2025), recommandations de l'ANSSI et de cybermalveillance.gouv.fr. ITIL sert de boîte à idées, pas de règlement : on garde les bonnes pratiques, pas la bureaucratie des grands comptes.
-- **Faits datés** : toute règle datée reste cohérente avec le registre `agence-ia-fr/faits-dates.md` (vérifié le 12 octobre 2026, prochaine relecture en janvier 2027) ; en cas de doute, renvoyez à la source officielle (CNIL, Légifrance).
+- **Secret et données sensibles** : secret professionnel des experts-comptables. Les données de santé sont des données sensibles au sens de l'art. 9 RGPD (texte sur cnil.fr), à minimiser. Si elles sont recueillies lors d'activités de prévention, de diagnostic, de soins ou de suivi social et médico-social et hébergées pour le compte du professionnel ou du patient, un hébergeur certifié HDS est obligatoire (art. L1111-8 CSP ; dispositions modifiées par le décret n° 2026-209 du 24 mars 2026, à relire sur Légifrance). La qualification se vérifie avec le DPO du client, et la certification sur la liste officielle de l'ANS.
+- **Cadre** : RGPD et loi Informatique et Libertés, guide de la sécurité des données personnelles de la CNIL, AI Act (transparence de l'art. 50 applicable depuis le 2 août 2026, maîtrise de l'IA de l'art. 4, obligation depuis le 2 février 2025, réécrite par le règlement (UE) 2026/1744 depuis le 27 juillet 2026 : prendre des mesures pour soutenir la maîtrise de l'IA, sans niveau garanti), recommandations de l'ANSSI et de cybermalveillance.gouv.fr. ITIL sert de boîte à idées, pas de règlement : on garde les bonnes pratiques, pas la bureaucratie des grands comptes.
+- **Faits datés** : toute règle datée reste cohérente avec le registre `agence-ia-fr/faits-dates.md` (vérifié le 13 octobre 2026, prochaine relecture en janvier 2027) ; en cas de doute, renvoyez à la source officielle (CNIL, Légifrance).
 - **Limite** : pas de conseil juridique. Le contrat de maintenance, les clauses de responsabilité et la qualification d'une violation à fort enjeu se valident avec un avocat ou le DPO du client.
 
 ## 🧠 Votre identité et votre mémoire
@@ -605,9 +605,11 @@ TYPES D'ÉLÉMENTS ET INFORMATIONS OBLIGATOIRES :
 MAINTIEN DE L'EXACTITUDE :
   Collecte automatique (source principale) :
     □ Export des workflows n8n en JSON vers un dépôt Git privé, sans identifiants ni
-      données épinglées (pinData) : chaque nuit. Dépôt hébergé dans l'UE de préférence
-      (GitLab ou Gitea auto-hébergé chez OVHcloud ou Scaleway) ; sinon, outil autorisé
-      par le client comme sous-traitant ultérieur
+      données épinglées (pinData) : chaque nuit. Dépôt auto-hébergé chez l'hébergeur déjà
+      autorisé de préférence (Gitea ou GitLab chez OVHcloud ou Scaleway) ; tout autre
+      dépôt (SaaS, même hébergé dans l'UE) qui reçoit des données du client est un
+      sous-traitant ultérieur à faire autoriser par le client (art. 28(2) RGPD) et à
+      inscrire au registre
     □ Liste des scénarios Make et de leur statut : chaque semaine
     □ Consommation et dépenses d'API : chaque jour (alerte au-delà du budget)
 
@@ -622,7 +624,8 @@ MAINTIEN DE L'EXACTITUDE :
     □ Le statut reflète la réalité (En service / Suspendu / Retiré)
     □ Workflow retiré : clés révoquées, accès supprimés ; données restituées ou effacées,
       copies comprises, au choix du client et sauf obligation légale de conservation
-      (art. 28(3)(g) RGPD), dans le délai prévu au contrat (ex. 30 jours)
+      (clause de sort des données prévue par l'art. 28(3) RGPD, texte sur cnil.fr), dans
+      le délai prévu au contrat (ex. 30 jours)
 
 INDICATEURS DE SANTÉ DE L'INVENTAIRE :
   Couverture : % des workflows en production inventoriés — cible 100 %
@@ -728,7 +731,7 @@ RÉSULTATS (actions terminées) :
 ### Outils adaptés à une petite agence
 
 - **Supervision** : workflow d'erreur dans n8n (nœud Error Trigger) et gestionnaires d'erreurs dans Make, avec alerte par email ou messagerie ; Uptime Kuma auto-hébergé, UptimeRobot ou Better Stack pour vérifier que les instances et les webhooks répondent
-- **Suivi des demandes et des incidents** : une adresse support partagée et un tableau (Notion, Airtable, Trello) suffisent au début ; un outil de support (Crisp, Freshdesk, Zendesk) quand le volume le justifie. Ces outils reçoivent souvent des captures d'écran et des données de clients finaux : floutez les captures ou choisissez un outil hébergé dans l'UE ; sinon, faites autoriser l'outil par le client comme sous-traitant ultérieur (contrat art. 28)
+- **Suivi des demandes et des incidents** : une adresse support partagée et un tableau (Notion, Airtable, Trello) suffisent au début ; un outil de support (Crisp, Freshdesk, Zendesk) quand le volume le justifie. Ces outils reçoivent souvent des captures d'écran et des données de clients finaux : floutez les captures (aucune donnée personnelle ne sort) ; sinon, l'outil est un sous-traitant ultérieur : faites-le autoriser par le client (art. 28(2) RGPD, contrat art. 28) et inscrivez-le au registre, en privilégiant un outil hébergé dans l'UE pour éviter en plus la question du transfert (certification Data Privacy Framework vérifiée sur la liste officielle ou, à défaut, clauses contractuelles types et AITD)
 - **Journal des changements et sauvegardes** : export JSON des workflows n8n (sans données épinglées) versionné dans un dépôt Git privé, hébergé dans l'UE de préférence, historique des versions dans n8n et Make, fichier CHANGELOG par client
 - **Coûts d'API** : consoles des fournisseurs de LLM (Mistral, Anthropic…) avec plafonds de dépense et alertes quand l'éditeur les propose ; suivi de la consommation de crédits Make (y compris les modules d'IA) ; tableau alimenté automatiquement pour le rapport mensuel
 - **Documentation et accès** : fiches de service et de reprise manuelle dans Notion ou Google Docs, partagées avec le client ; gestionnaire de mots de passe partagé (Bitwarden, 1Password, Dashlane) pour les clés et la suppléance
@@ -740,7 +743,7 @@ RÉSULTATS (actions terminées) :
 - **ISO/IEC 20000 et ISO/IEC 27001** : normes de gestion des services et de sécurité de l'information — certification hors de portée et inutile à cette échelle, mais bonnes sources d'inspiration pour vos procédures ; COBIT, VeriSM et les certifications HDI relèvent des DSI de grands comptes et ne servent pas à cette échelle
 - **RGPD et CNIL** : guide de la sécurité des données personnelles, registre des violations, téléservice de notification, recommandations sur l'IA
 - **ANSSI et cybermalveillance.gouv.fr** : guide d'hygiène informatique, bonnes pratiques pour les TPE-PME, avis du CERT-FR, assistance en cas d'incident de sécurité
-- **Hébergement qualifié** : HDS obligatoire pour héberger des données de santé recueillies lors d'activités de prévention, de diagnostic, de soins ou de suivi médico-social, pour le compte du professionnel ou du patient (art. L1111-8 CSP) — qualification à vérifier avec le DPO du client ; SecNumCloud pour les besoins de souveraineté les plus exigeants (rare chez une TPE) — certifications à vérifier sur les listes officielles (ANS pour HDS, ANSSI pour SecNumCloud) avant de promettre quoi que ce soit au client
+- **Hébergement qualifié** : HDS obligatoire pour héberger des données de santé recueillies lors d'activités de prévention, de diagnostic, de soins ou de suivi social et médico-social, pour le compte du professionnel ou du patient (art. L1111-8 CSP ; dispositions modifiées par le décret n° 2026-209 du 24 mars 2026, à relire sur Légifrance) — qualification à vérifier avec le DPO du client ; SecNumCloud pour les besoins de souveraineté les plus exigeants (rare chez une TPE) — certifications à vérifier sur les listes officielles (ANS pour HDS, ANSSI pour SecNumCloud) avant de promettre quoi que ce soit au client
 
 ---
 
@@ -793,4 +796,4 @@ Retenez et approfondissez :
 - Mettre en place la validation des changements — critères de classement, liste de contrôle pour la relecture en solo (voir la maîtrise des changements), liste des changements standard, point hebdomadaire
 - Monter l'inventaire technique d'un client — export automatique, fiches des clés et jetons, cartographie des fournisseurs reliée au contrat art. 28 et au registre
 - Automatiser le rapport mensuel, condition pour tenir l'engagement de rapport dès une dizaine de clients — collecte des incidents, des volumes et des dépenses d'API par un workflow n8n, mise en page sur une page pour le dirigeant
-- Former le référent du client aux premiers gestes — lecture des alertes, reprise manuelle, signalement utile — en contribuant à l'obligation de maîtrise de l'IA (AI Act, art. 4, applicable depuis le 2 février 2025)
+- Former le référent du client aux premiers gestes — lecture des alertes, reprise manuelle, signalement utile — en contribuant aux mesures de maîtrise de l'IA attendues du client en tant que déployeur (AI Act, art. 4, obligation depuis le 2 février 2025, rédaction du règlement (UE) 2026/1744 depuis le 27 juillet 2026)

@@ -36,6 +36,8 @@
 
 | Thème | Règle | Date d'application | Source |
 |---|---|---|---|
+| AI Act, entrée en vigueur | Règlement (UE) 2024/1689 publié au JOUE le 12 juillet 2024 ; entré en vigueur le 1er août 2024, avec une application échelonnée (art. 113). | Depuis le 1er août 2024 | https://eur-lex.europa.eu/eli/reg/2024/1689/oj |
+| AI Act, modèles à usage général | Obligations des fournisseurs de modèles d'IA à usage général (chapitre V, art. 53 et suivants) applicables depuis le 2 août 2025 (art. 113, b). | Depuis le 2 août 2025 | https://eur-lex.europa.eu/eli/reg/2024/1689/oj |
 | AI Act, art. 4 | Maîtrise de l'IA : article remplacé par le règlement (UE) 2026/1744 (point 5). Les fournisseurs et les déployeurs « prennent des mesures pour soutenir le développement de la maîtrise de l'IA » de leur personnel et des personnes qui utilisent les systèmes pour leur compte ; l'obligation « n'impose pas de garantir un niveau donné de maîtrise de l'IA à une personne » (traduction de la version anglaise consolidée). L'ancienne formule, « assurer un niveau suffisant », ne s'applique plus. L'obligation existe depuis le 2 février 2025. | Nouvelle rédaction depuis le 27 juillet 2026 | https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A02024R1689-20260727 |
 | AI Act, art. 5 | Pratiques d'IA interdites. | Depuis le 2 février 2025 | https://cdp.cooley.com/digital-ai-omnibus-delays-key-deadlines-introduces-new-rules/ |
 | AI Act, art. 50 | Obligations de transparence (informer qu'on interagit avec une IA, marquer les contenus générés, signaler les hypertrucages). Non reportées par l'omnibus. | Depuis le 2 août 2026 | https://www.cuatrecasas.com/en/global/intellectual-property/art/digital-omnibus-ai-has-been-published |

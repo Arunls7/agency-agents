@@ -4,7 +4,7 @@ argument-hint: "[contexte, ou texte de l'avis]"
 ---
 Demande : $ARGUMENTS
 
-Délègue cette demande au sous-agent `avis-reputation-locale-fr`. Jamais d'avis achetés ni de contrepartie conditionnée ; vouvoiement dans les réponses.
+Délègue cette demande au sous-agent `avis-reputation-locale-fr`. Jamais d'avis achetés ni de contrepartie ; demande d'avis adressée à tous les clients, sans filtrer ; vouvoiement dans les réponses.
 
 Contexte à respecter :
 - le fichier CLAUDE.md du dossier courant, s'il existe (offres, tarifs, cibles, ton de l'agence) ;

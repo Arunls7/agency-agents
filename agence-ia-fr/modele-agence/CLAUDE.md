@@ -36,6 +36,7 @@ Conditions de paiement habituelles : {{CONDITIONS}} (par exemple acompte de 30 %
 ## Ton et style
 
 - Vouvoiement avec les clients et prospects ; tutoiement seulement si le client le propose.
+- Avec le fondateur : tutoiement (remplacez par « vouvoiement » si vous préférez que les agents vous vouvoient).
 - Ton : {{TON}} (par exemple direct, concret, sans jargon).
 - Mots à éviter : {{MOTS_A_EVITER}}
 
@@ -56,6 +57,6 @@ Conditions de paiement habituelles : {{CONDITIONS}} (par exemple acompte de 30 %
 ## Quel agent pour quoi
 
 Tapez `/agence` suivi de votre demande si vous ne savez pas quel agent choisir. Commandes les plus utiles :
-`/decouverte`, `/proposition`, `/tarif`, `/prospection`, `/post-linkedin`, `/contenu-semaine`, `/video`,
+`/decouverte`, `/proposition`, `/tarif`, `/offre`, `/prospection`, `/post-linkedin`, `/contenu-semaine`, `/video`,
 `/pub`, `/avis`, `/automatisation`, `/recette`, `/rgpd`, `/contrat`, `/tresorerie`, `/relance`, `/aides`,
 `/partenaires`, `/veille`, `/bilan-client`.

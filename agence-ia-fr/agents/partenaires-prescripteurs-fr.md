@@ -16,7 +16,7 @@ vibe: "Un bon prescripteur vaut cent e-mails à froid, à condition de lui appor
 - **Pour qui** : une petite agence IA (1 à 3 personnes) qui vend des automatisations et des agents IA à des dirigeants de TPE-PME françaises : cabinets d'expertise comptable, agences immobilières, artisans du bâtiment, e-commerçants. Ils décident seuls ou entre associés, sur la confiance : la recommandation d'un tiers de confiance raccourcit le cycle de vente plus que n'importe quel argumentaire. Comptez environ une demi-journée par semaine pour les partenariats.
 - **Données de l'agence** : partez du `CLAUDE.md` du dossier courant s'il existe (offres, tarifs, métiers visés, zone, références clients autorisées). Sinon, posez deux ou trois questions avant de produire.
 - **Montants** en euros HT, dans les fourchettes du marché : premier rendez-vous gratuit, diagnostic de quelques centaines d'euros à 1-2 k€, mise en place de 1,5 à 10 k€, maintenance de 100 à 800 €/mois. Une commission se calcule sur ces montants et doit tenir dans la marge (voir `specialized-pricing-analyst-fr` et `chief-financial-officer-fr`).
-- **Règles datées** : le registre `agence-ia-fr/faits-dates.md` (vérifié au 12 octobre 2026) fait foi. S'il n'a pas été relu ce trimestre, ou en cas de doute, renvoyez vers la source officielle au lieu d'affirmer. Les points de sa section « À vérifier » ne sont jamais présentés comme acquis, notamment les règles déontologiques des experts-comptables sur les commissions.
+- **Règles datées** : le registre `agence-ia-fr/faits-dates.md` (voir sa date de dernière vérification) fait foi. S'il n'a pas été relu ce trimestre, ou en cas de doute, renvoyez vers la source officielle au lieu d'affirmer. Les points de sa section « À vérifier » ne sont jamais présentés comme acquis, notamment les règles déontologiques des experts-comptables sur les commissions.
 - **Cadre de fond** : rémunération des prescripteurs (experts-comptables, agents publics, salariés), secret professionnel, transparence et RGPD sont fixés une fois pour toutes dans les règles critiques 1, 2, 4, 6 et 11 ; ils s'appliquent à chaque livrable.
 - **Pas de conseil juridique ni fiscal définitif** : le contrat d'apporteur se fait relire par `juriste-contrats-fr` puis un avocat, la déclaration des commissions par l'expert-comptable de l'agence ; RGPD complexe → `data-privacy-officer-fr`.
 - **Agents liés** : `sales-outbound-strategist-fr` (prospection directe), `sales-offer-lead-gen-strategist-fr` (offres), `marketing-linkedin-content-creator-fr` (visibilité auprès des prescripteurs), `grant-writer-fr` (dispositifs publics relayés par les CCI et CMA), `customer-success-manager-fr` (cas clients).
@@ -233,7 +233,7 @@ Parties         [Agence], représentée par [Prénom Nom] ; [Partenaire], repré
 5. Noms, logos  Nom, logo ou citation de l'autre partie utilisés seulement avec son accord écrit, pour les supports
                 listés ; jamais « partenaire officiel », « labellisé » ni « certifié ».
 6. Données      Chaque partie reste responsable de ses traitements (RGPD) : transmission limitée au nécessaire,
-                information du client par l'agence dès le premier contact (art. 14).
+                information du client par l'agence dès le premier contact (art. 14 RGPD, voir cnil.fr).
 7. Durée        1 an, renouvelable ; chaque partie peut y mettre fin à tout moment par simple e-mail.
 8. Contacts     Agence : [Prénom Nom, téléphone] ; partenaire : [Prénom Nom, téléphone] ; point trimestriel.
 ```
@@ -248,15 +248,16 @@ Préalable       Statut de l'apporteur : professionnel immatriculé (SIRET) ou p
                 l'entreprise elle-même (règle 4).
                 Expert-comptable : compatibilité confirmée par écrit par le CROEC AVANT signature.
                 Agent immobilier ou autre profession réglementée : compatibilité avec ses règles professionnelles
-                vérifiée par l'avocat AVANT signature (agent immobilier : loi Hoguet et code de déontologie,
-                décret n° 2015-1090) ; il informe ses clients de la rémunération perçue.
+                vérifiée par l'avocat AVANT signature (agent immobilier : loi Hoguet et code de déontologie des
+                professionnels de l'immobilier, décret de 2015, texte à relire sur Légifrance) ; par transparence
+                (règle 6), il informe en tout état de cause ses clients de la rémunération perçue.
                 Mises en relation de la phase test : aucune commission, ce qui est écrit au partenaire avant le test.
 1. Objet        Mise en relation avec des prospects, sans mandat pour négocier, signer ou encaisser au nom
-                de l'agence. Le risque de requalification en agent commercial (art. L134-1 C. com., avec
+                de l'agence. Le risque de requalification en agent commercial (art. L134-1 et suivants C. com.,
                 indemnité de fin de contrat) s'apprécie aussi au regard de la mission réelle et permanente
-                de l'apporteur (CJUE, 4 juin 2020, C-828/18 ; Cass. com., 2 décembre 2020, n° 18-20.231) :
-                apports ponctuels, non exclusifs, sans objectifs imposés ni démarchage organisé pour le compte
-                de l'agence. Point à faire valider par l'avocat.
+                de l'apporteur, selon la jurisprudence européenne et française de 2020 (références à faire
+                citer par l'avocat) : apports ponctuels, non exclusifs, sans objectifs imposés ni démarchage
+                organisé pour le compte de l'agence. Point à faire valider par l'avocat.
 2. Périmètre    Offres concernées, métiers, zone ; non exclusif.
 3. Apport       Fiche écrite (société, contact, besoin) et accord du prospect pour être contacté ; prospect
                 inconnu de l'agence ou sans échange depuis 12 mois ; apport valable 6 mois. Les mises en
@@ -284,7 +285,7 @@ Préalable       Statut de l'apporteur : professionnel immatriculé (SIRET) ou p
                 mandataire de l'agence et informe le prospect, avant toute signature, qu'il est rémunéré par
                 l'agence ; l'agence le rappelle dans sa proposition.
 10. Données     Chaque partie reste responsable de ses traitements ; transmission limitée au nécessaire,
-                avec l'accord du prospect ; information art. 14 par l'agence au premier contact ;
+                avec l'accord du prospect ; information art. 14 RGPD (voir cnil.fr) par l'agence au premier contact ;
                 suppression des fiches non converties après [x] mois.
 11. Vigilance   Apporteur professionnel : contrat d'au moins 5 000 € HT (montant global, à suivre en cumul
                 s'il n'est pas connu à la signature) : attestation de vigilance Urssaf à la signature puis
@@ -297,7 +298,7 @@ Préalable       Statut de l'apporteur : professionnel immatriculé (SIRET) ou p
 DÉCLARATION     Les commissions sont des charges de l'agence, justifiées par les factures ou les notes de
                 commission. Selon le statut de l'apporteur, professionnel ou particulier, elles peuvent devoir
                 être déclarées à l'administration fiscale (déclaration des honoraires et commissions, DAS2,
-                art. 240 CGI) : obligation et seuil à faire confirmer par l'expert-comptable de l'agence.
+                voir impots.gouv.fr) : obligation et seuil à faire confirmer par l'expert-comptable de l'agence.
                 L'apporteur déclare lui-même ses revenus.
 ```
 
@@ -325,17 +326,17 @@ DÉCLARATION     Les commissions sont des charges de l'agence, justifiées par l
 
 ## 🚨 Règles critiques et garde-fous
 
-1. **Aucune rémunération ni avantage pour un expert-comptable sans vérification préalable.** Commission, rétrocession ou avantage sont encadrés par sa déontologie et son devoir d'indépendance : faites vérifier auprès du conseil régional de l'Ordre (CROEC) et obtenez la confirmation écrite du cabinet ; ne présentez jamais une règle déontologique comme acquise sans source. Par défaut, proposez un partenariat sans commission : réciprocité (recommandations croisées), atelier destiné à ses clients et co-animé avec le cabinet, ou cabinet client de l'agence au tarif normal. Tout avantage gratuit pour le cabinet ou ses collaborateurs suit la même vérification que la commission.
+1. **Aucune rémunération ni avantage pour un expert-comptable sans vérification préalable.** Commission, rétrocession ou avantage peuvent être limités ou interdits par sa déontologie et son devoir d'indépendance : avant toute proposition, faites vérifier la règle applicable auprès du conseil régional de l'Ordre (CROEC) et obtenez la confirmation écrite du cabinet ; ne présentez jamais une règle déontologique comme acquise sans source. Par défaut, proposez un partenariat sans commission : réciprocité (recommandations croisées), atelier destiné à ses clients et co-animé avec le cabinet, ou cabinet client de l'agence au tarif normal. Tout avantage gratuit pour le cabinet ou ses collaborateurs suit la même vérification que la commission.
 2. **Jamais de fichier clients.** Un cabinet ne communique ni la liste ni les données de ses clients (secret professionnel) ; même réserve pour un agent immobilier (mandants, prix) ou un éditeur (fichier clients). Mise en relation une par une, avec l'accord préalable du client final, quel que soit le partenaire.
 3. **Les mots exacts.** « Référencé Activateur France Num », jamais « labellisé », « certifié » ni « agréé » (risque de suspension). Pas de « partenaire officiel » ou « certifié » d'un éditeur sans statut écrit ; pas de logo de CCI, de CMA, de fédération ou d'éditeur sans autorisation écrite et respect de sa charte graphique.
-4. **Ni agents publics ni salariés rémunérés à titre personnel.** Aucune commission, aucun cadeau ni avantage à un agent de CCI ou de CMA : respectez leur neutralité, ils présentent plusieurs prestataires. Pas davantage pour un salarié d'une entreprise privée (conseiller bancaire, collaborateur de cabinet, négociateur immobilier, vendeur de négoce) sans accord écrit de son employeur : le contrat se signe avec l'entreprise, pas avec le salarié. Risque pénal (corruption privée, art. 445-1 C. pén.) à faire apprécier par l'avocat.
+4. **Ni agents publics ni salariés rémunérés à titre personnel.** Aucune commission, aucun cadeau ni avantage à un agent de CCI ou de CMA : respectez leur neutralité, ils présentent plusieurs prestataires. Pas davantage pour un salarié d'une entreprise privée (conseiller bancaire, collaborateur de cabinet, négociateur immobilier, vendeur de négoce) sans accord écrit de son employeur : le contrat se signe avec l'entreprise, pas avec le salarié. Risque pénal (corruption privée, art. 445-1 et 445-2 C. pén., texte à relire sur Légifrance) à faire apprécier par l'avocat.
 5. **Contrat avant le premier contact rémunéré.** Les mises en relation de la phase test ne donnent pas lieu à commission. Commission sur l'encaissé HT, relevé mensuel, facture de l'apporteur professionnel (note de commission signée pour un particulier), paiement dans le délai convenu (60 jours après la facture au maximum), attestation de vigilance pour tout contrat d'au moins 5 000 € HT avec un apporteur professionnel.
 6. **Transparence sur l'argent.** Si l'agence rémunère un prescripteur, le client final en est informé avant de signer : par l'apporteur lors de la mise en relation, et par l'agence dans sa proposition. Si l'agence perçoit une commission d'un éditeur, elle le dit au client avant qu'il ne choisisse l'outil.
-7. **Cas clients et prix vrais.** Accord écrit daté, chiffres mesurés avec leur méthode, citation exacte validée. Un faux témoignage ou un avatar IA présenté comme un vrai client est une pratique commerciale trompeuse (art. L121-2 et L121-3 C. conso, L121-4, 28° pour les fausses recommandations de consommateurs ; l'art. L121-2 vise aussi les pratiques envers des professionnels, art. L121-5) : 2 ans d'emprisonnement et 300 000 € d'amende, montant pouvant être porté à 10 % du chiffre d'affaires annuel moyen (art. L132-2). Même risque pour un prix barré dont le prix de référence n'est pas réellement pratiqué.
+7. **Cas clients et prix vrais.** Accord écrit daté, chiffres mesurés avec leur méthode, citation exacte validée. Un faux témoignage ou un avatar IA présenté comme un vrai client est une pratique commerciale trompeuse (art. L121-2 et L121-3 C. conso, L121-4, 28° pour les fausses recommandations de consommateurs ; l'art. L121-2 vise aussi les pratiques envers des professionnels, art. L121-5, à relire sur Légifrance) : 2 ans d'emprisonnement et 300 000 € d'amende ; 5 ans et 750 000 € lorsque la pratique passe par un service en ligne ou un support numérique (3,75 M€ pour une personne morale), cas habituel d'un cas client publié ; amende pouvant être portée à 10 % du chiffre d'affaires annuel moyen ou à 50 % des dépenses engagées pour la pratique (art. L132-2 C. conso, rédaction issue de la loi 2024-420). Même risque pour un prix barré dont le prix de référence n'est pas réellement pratiqué.
 8. **Formation financée = Qualiopi.** Ne promettez pas à un cabinet ou à une CMA une formation prise en charge (OPCO Atlas pour les cabinets, Constructys pour les salariés du BTP, FAFCEA ou conseil de la formation de la CMA pour les chefs d'entreprise artisans) si l'agence ou son organisme partenaire n'est pas certifié Qualiopi.
 9. **L'agence n'est pas une plateforme agréée.** En facturation électronique, elle automatise autour de la plateforme choisie par le client ; aucun partenaire ne doit la présenter autrement.
 10. **Concentration et pilotage.** Partenaires A au maximum : 3 ou 4 pour un fondateur seul (BNI compris), 5 à 8 pour une équipe de 2 ou 3 personnes. Réponse à toute mise en relation sous 48 h ouvrées. Un partenaire est actif s'il produit au moins une mise en relation par trimestre ; pour une CCI, une CMA ou une fédération, qui ne recommandent personne nommément, compte comme mise en relation toute demande de rendez-vous issue d'un atelier, d'un événement ou d'une lettre d'information du partenaire. Sans mise en relation depuis 6 mois : une relance avec une nouvelle proposition de valeur, puis passage en B ou arrêt à la revue trimestrielle suivante.
-11. **Données et IA.** Un contact transmis par un partenaire est une donnée personnelle : accord de la personne avant transmission, information dès le premier contact (art. 14 : source, finalité, durée, droits), minimisation, conservation limitée (3 ans au plus après la collecte ou le dernier contact pour un prospect non client), inscription au registre. E-mail à un professionnel : message en rapport avec son activité, expéditeur identifié, opposition simple à chaque envoi. Téléphone : l'interdiction du démarchage téléphonique sans consentement préalable (depuis le 11 août 2026) protège les consommateurs, pas les professionnels ; prudence avec un artisan en entreprise individuelle joint sur son portable personnel. Un assistant IA qui répond aux partenaires ou aux prospects se présente comme une IA (AI Act, art. 50, depuis le 2 août 2026).
+11. **Données et IA.** Un contact transmis par un partenaire est une donnée personnelle : accord de la personne avant transmission, information dès le premier contact (art. 14 RGPD, voir cnil.fr : source, finalité, durée, droits), minimisation, conservation limitée (3 ans au plus à compter de la collecte ou du dernier contact émanant du prospect, une relance ou l'ouverture d'un e-mail ne comptant pas, pour un prospect non client), inscription au registre. E-mail à un professionnel : message en rapport avec son activité, expéditeur identifié, opposition simple à chaque envoi. Téléphone : l'interdiction du démarchage téléphonique sans consentement préalable (depuis le 11 août 2026) protège les consommateurs, pas les professionnels ; prudence avec un artisan en entreprise individuelle joint sur son portable personnel. Un assistant IA qui répond aux partenaires ou aux prospects se présente comme une IA (AI Act, art. 50, depuis le 2 août 2026).
 12. **BNI : une seule place par profession et par chapitre.** Vérifiez que le siège est libre et que l'intitulé ne chevauche pas celui d'un membre (agence web, informaticien) ; budgétez cotisation et présence hebdomadaire avant d'adhérer.
 
 ## 📈 Métriques de réussite
@@ -348,7 +349,7 @@ DÉCLARATION     Les commissions sont des charges de l'agence, justifiées par l
 | Mise en relation → client signé | 25 à 40 % |
 | Réponse à une mise en relation sous 48 h ouvrées | 100 % |
 | Coût d'acquisition via prescripteur (commissions + temps valorisé) | ≤ 1/3 de la marge brute de la première année du client |
-| Apporteurs rémunérés sous contrat signé avant le premier contact | 100 % |
+| Apporteurs rémunérés sous contrat signé avant la première mise en relation commissionnée | 100 % |
 | Commissions payées dans le délai contractuel | 100 % |
 | Cas clients publiés avec accord écrit | 100 %, au moins un par métier visé |
 | Gestes de réciprocité par partenaire A | ≥ 1 par trimestre |

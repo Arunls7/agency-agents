@@ -1,6 +1,6 @@
 # 🇫🇷 Agence IA — kit Claude Code pour les TPE-PME françaises
 
-38 agents et 27 commandes pour faire tourner une agence IA qui vend à des **dirigeants de TPE-PME françaises** : cabinets d'expertise comptable, agences immobilières, artisans du bâtiment, e-commerçants.
+46 agents et 28 commandes pour faire tourner une agence IA qui vend à des **dirigeants de TPE-PME françaises** : cabinets d'expertise comptable, agences immobilières, artisans du bâtiment, e-commerçants.
 
 Tout est **adapté à la France** :
 
@@ -9,7 +9,7 @@ Tout est **adapté à la France** :
 - RGPD, AI Act, règles de la CNIL et de la DGCCRF, facture électronique ;
 - logiciels utilisés en France (Pennylane, Qonto, Apimo, Obat, PrestaShop…).
 
-Les agents viennent de [The Agency](https://github.com/msitarzewski/agency-agents) (33 adaptés) ou ont été créés pour ce kit (5). Ils ont tous été relus sous trois angles : fidélité, exactitude juridique et qualité du français.
+Les agents viennent de [The Agency](https://github.com/msitarzewski/agency-agents) (33 adaptés) ou ont été créés pour ce kit (13). Ils ont tous été relus sous trois angles : fidélité, exactitude juridique et qualité du français.
 
 Le kit installe aussi :
 
@@ -147,6 +147,7 @@ L'application ne connaît pas les agents `-fr` : pour eux, utilisez l'applicatio
 | `/plan-livraison` | Plan de livraison par petites étapes, chacune avec son test et sa preuve |
 | `/recette` | Vérifier qu'une solution est prête à être livrée |
 | `/diagnostic` | Une automatisation livrée ne marche plus : trouver la cause avant de corriger |
+| `/securite` | Cybersécurité : vendre l'offre aux entreprises, diagnostic, sensibilisation, fraudes, comptes en ligne, veille des menaces, cyberattaque, sécurité des livrables IA |
 | `/rgpd` | Question RGPD |
 | `/contrat` | Préparer ou relire un contrat |
 | `/tresorerie` | Point trésorerie et marge |
@@ -233,6 +234,21 @@ Vous pouvez aussi appeler un agent par son nom : « Utilise `juriste-contrats-fr
 | `juriste-contrats-fr` ✨ | CGV, contrats de prestation et de maintenance, propriété intellectuelle |
 | `specialized-chief-of-staff-fr` | Bras droit : oriente les demandes, fiche client, comptes rendus |
 
+### Cybersécurité
+
+Une équipe pour **vendre et livrer une offre de cybersécurité aux TPE-PME**, centrée sur les risques d'aujourd'hui. Aucun de ces agents ne lance de scan ni de test d'intrusion : ils n'ont pas accès au terminal, et tout test technique exige l'autorisation écrite du propriétaire du système.
+
+| Agent | À quoi il sert |
+|---|---|
+| `cybersecurite-offre-fr` ✨ | Construire et vendre l'offre : niveaux, argumentaire par métier, objections, prospection, contrat, partenaires |
+| `cybersecurite-diagnostic-fr` ✨ | Diagnostic d'hygiène, rapport au dirigeant, plan d'action, suivi trimestriel, questionnaire d'assurance |
+| `cybersecurite-sensibilisation-fr` ✨ | Ateliers et quiz pour les salariés, fiches réflexes, faux hameçonnage encadré |
+| `cybersecurite-fraude-ia-fr` ✨ | Faux dirigeant, faux RIB, voix ou vidéo truquées, QR codes piégés : procédures anti-fraude |
+| `cybersecurite-comptes-cloud-fr` ✨ | Microsoft 365, Google Workspace, comptes en ligne : vol de session, règles de transfert cachées, accès oubliés |
+| `cybersecurite-incident-fr` ✨ | Cyberattaque chez un client : premiers gestes, preuves, plainte, assurance, CNIL |
+| `cybersecurite-ia-fr` ✨ | Sécurité des automatisations et agents IA livrés, de l'agence elle-même, charte d'usage de l'IA |
+| `cybersecurite-veille-menaces-fr` ✨ | Bulletin mensuel des menaces par métier, alertes sur les failles exploitées, avec sources officielles |
+
 ✨ = agent créé pour ce kit.
 
 Ces agents donnent un cadre et posent les bonnes questions. Ils **ne remplacent pas un avocat, un DPO ou un expert-comptable**.
@@ -312,8 +328,8 @@ Pour récupérer les nouveautés du dépôt d'origine, cliquez d'abord sur **Syn
 
 | Élément | Rôle |
 |---|---|
-| `agents/` | les 38 agents `-fr` |
-| `commandes/` | les 27 commandes `/slash` |
+| `agents/` | les 46 agents `-fr` |
+| `commandes/` | les 28 commandes `/slash` |
 | `modele-agence/CLAUDE.md` | modèle du contexte de l'agence, rempli par `/configurer-agence` |
 | `faits-dates.md` | registre des faits datés, sourcés et vérifiés |
 | `agency-team.txt` | identifiants des agents d'origine adaptés |

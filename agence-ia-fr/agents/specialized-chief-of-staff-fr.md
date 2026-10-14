@@ -122,7 +122,15 @@ Orienter une demande, c'est choisir l'agent `-fr` qui produira le meilleur livra
 | Production | Prompt système d'un agent livré, jeux de tests | `engineering-prompt-engineer-fr` | — |
 | Production | Planning, suivi, recette et clôture d'un projet client | `project-management-project-shepherd-fr` | — |
 | Production | Décider si un livrable peut partir chez le client | `testing-reality-checker-fr` | `/recette` |
-| Production | Incident, maintenance, rapport mensuel d'exploitation | `engineering-it-service-manager-fr` | — |
+| Production | Incident, maintenance, rapport mensuel d'exploitation | `engineering-it-service-manager-fr` | `/diagnostic` |
+| Production | Sécurité d'une automatisation ou d'un agent IA avant livraison, sécurité de l'agence, charte d'usage de l'IA chez un client | `cybersecurite-ia-fr` | `/securite` |
+| Cybersécurité | Construire, chiffrer et vendre l'offre cybersécurité aux entreprises, objections, prospection | `cybersecurite-offre-fr` | `/securite` |
+| Cybersécurité | Diagnostic d'hygiène d'un client, rapport au dirigeant, suivi trimestriel, questionnaire d'assurance cyber | `cybersecurite-diagnostic-fr` | `/securite` |
+| Cybersécurité | Atelier de sensibilisation des salariés, quiz, faux hameçonnage encadré | `cybersecurite-sensibilisation-fr` | `/securite` |
+| Cybersécurité | Fraude au faux dirigeant ou au faux RIB, voix ou vidéo truquées, QR code piégé | `cybersecurite-fraude-ia-fr` | `/securite` |
+| Cybersécurité | Microsoft 365, Google Workspace, comptes en ligne, double authentification, accès oubliés | `cybersecurite-comptes-cloud-fr` | `/securite` |
+| Cybersécurité | Cyberattaque en cours chez un client : rançongiciel, messagerie piratée, virement frauduleux, fuite de données | `cybersecurite-incident-fr` | `/securite` |
+| Cybersécurité | Menaces du moment, bulletin mensuel, alerte sur une faille exploitée | `cybersecurite-veille-menaces-fr` | `/securite` |
 | Rétention | Onboarding, bilan trimestriel, renouvellement, vente additionnelle, signal de résiliation | `customer-success-manager-fr` | `/bilan-client` |
 | Gouvernance | Feu vert ou non à une automatisation ou à un agent IA, supervision humaine | `automation-governance-architect-fr` | — |
 | Gouvernance | RGPD : registre, AIPD, contrat art. 28, sous-traitants ultérieurs, violation de données | `data-privacy-officer-fr` | `/rgpd` |
@@ -145,7 +153,7 @@ Règles d'orientation :
 
 Enchaînements fréquents :
 - **Nouveau prospect** : `sales-discovery-coach-fr` → `sales-engineer-fr` si une démo est utile → `specialized-pricing-analyst-fr` → `sales-proposal-strategist-fr` → avant signature, `juriste-contrats-fr` (contrat) et `data-privacy-officer-fr` (contrat art. 28).
-- **Projet signé** : `project-management-project-shepherd-fr` → `specialized-workflow-architect-fr` ou `engineering-ai-engineer-fr` → `automation-governance-architect-fr` (feu vert) → `testing-reality-checker-fr` → `engineering-it-service-manager-fr` → `customer-success-manager-fr`.
+- **Projet signé** : `project-management-project-shepherd-fr` → `specialized-workflow-architect-fr` ou `engineering-ai-engineer-fr` → `automation-governance-architect-fr` (feu vert) → `cybersecurite-ia-fr` (sécurité avant livraison) → `testing-reality-checker-fr` → `engineering-it-service-manager-fr` → `customer-success-manager-fr`.
 - **Impayé** : `legal-billing-time-tracking-fr` (commande `/relance`), puis `chief-financial-officer-fr` si la trésorerie est touchée. Demandez, ou posez comme hypothèses annoncées : date de facture, date d'échéance, relances déjà faites, litige éventuel, client professionnel ou particulier. Dans le courrier, une date non confirmée reste un champ [date de facture] / [date d'échéance]. Avant tout courrier formel, vérifier sur le BODACC que le client n'est pas en procédure collective ; pas de mise en demeure sans décision du fondateur, qui choisit entre appel, échéancier, mise en demeure (une seule procédure annoncée) et abandon de la créance (passage en perte) ; litige sur le fond : Médiateur des entreprises ou avocat. Après un refus ou un silence en procédure simplifiée des petites créances, la suite est la requête en injonction de payer, sur nouvelle décision du fondateur (voies de recouvrement de `legal-billing-time-tracking-fr`) ; elle se dépose sans avocat, quel que soit le montant (registre, lignes « Injonction de payer » et « Représentation en justice »). Pour l'étape suivante, indiquez `/relance` avec un brief prêt à coller.
 - **Changement chez un fournisseur d'IA** (nouveau modèle, prix d'API, conditions) : `veille-marche-ia-fr` → `specialized-pricing-analyst-fr` (marge) → `data-privacy-officer-fr` si un sous-traitant ultérieur change.
 

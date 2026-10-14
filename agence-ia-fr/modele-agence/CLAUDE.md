@@ -66,5 +66,5 @@ Conditions de paiement habituelles : {{CONDITIONS}} (par exemple acompte de 30 %
 
 Tapez `/agence` suivi de votre demande si vous ne savez pas quel agent choisir. Commandes les plus utiles :
 `/decouverte`, `/proposition`, `/tarif`, `/offre`, `/prospection`, `/post-linkedin`, `/contenu-semaine`, `/video`,
-`/pub`, `/audit-pub`, `/avis`, `/cadrage`, `/questionnaire-client`, `/automatisation`, `/plan-livraison`, `/recette`, `/diagnostic`, `/rgpd`, `/contrat`, `/tresorerie`, `/relance`, `/aides`,
+`/pub`, `/audit-pub`, `/avis`, `/cadrage`, `/questionnaire-client`, `/automatisation`, `/plan-livraison`, `/recette`, `/diagnostic`, `/securite`, `/rgpd`, `/contrat`, `/tresorerie`, `/relance`, `/aides`,
 `/partenaires`, `/veille`, `/bilan-client`.

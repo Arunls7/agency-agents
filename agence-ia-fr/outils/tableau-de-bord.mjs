@@ -29,6 +29,7 @@ const DOMAINES = [
   ['Argent', ['chief-financial-officer-fr', 'legal-billing-time-tracking-fr', 'grant-writer-fr']],
   ['Développement et marché', ['partenaires-prescripteurs-fr', 'business-strategist-fr', 'product-manager-fr', 'veille-marche-ia-fr']],
   ['Conformité et organisation', ['automation-governance-architect-fr', 'data-privacy-officer-fr', 'support-legal-compliance-checker-fr', 'juriste-contrats-fr', 'specialized-chief-of-staff-fr']],
+  ['Cybersécurité', ['cybersecurite-offre-fr', 'cybersecurite-diagnostic-fr', 'cybersecurite-sensibilisation-fr', 'cybersecurite-fraude-ia-fr', 'cybersecurite-comptes-cloud-fr', 'cybersecurite-incident-fr', 'cybersecurite-ia-fr', 'cybersecurite-veille-menaces-fr']],
 ];
 const AUTRES = 'Autres';
 
@@ -52,6 +53,10 @@ const TITRES = {
   'chief-financial-officer-fr': 'DAF', 'legal-billing-time-tracking-fr': 'Facturation et temps',
   'grant-writer-fr': 'Aides et financements', 'partenaires-prescripteurs-fr': 'Partenaires et prescripteurs',
   'business-strategist-fr': 'Stratégie', 'product-manager-fr': 'Offres packagées', 'veille-marche-ia-fr': 'Veille marché',
+  'cybersecurite-offre-fr': 'Offre cybersécurité', 'cybersecurite-diagnostic-fr': 'Diagnostic cyber',
+  'cybersecurite-sensibilisation-fr': 'Sensibilisation cyber', 'cybersecurite-fraude-ia-fr': 'Fraudes et hypertrucages',
+  'cybersecurite-comptes-cloud-fr': 'Comptes en ligne', 'cybersecurite-incident-fr': 'Cyberattaque',
+  'cybersecurite-ia-fr': 'Sécurité des livrables IA', 'cybersecurite-veille-menaces-fr': 'Veille des menaces',
   'automation-governance-architect-fr': 'Gouvernance des automatisations', 'data-privacy-officer-fr': 'RGPD',
   'support-legal-compliance-checker-fr': 'Conformité réglementaire', 'juriste-contrats-fr': 'Contrats',
 };
@@ -234,7 +239,7 @@ const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;'
 const nb = (liste, e) => liste.filter(x => x.etat === e).length;
 const installes = liste => liste.filter(x => x.etat !== 'manquant').length;
 const domainesPresents = [...DOMAINES.map(d => d[0]), AUTRES].filter(d => agents.some(a => a.domaine === d));
-const varDomaine = d => `--serie-${DOMAINES.findIndex(x => x[0] === d) + 1 || 8}`;
+const varDomaine = d => `--serie-${DOMAINES.findIndex(x => x[0] === d) + 1 || 9}`;
 
 const ETATS = [
   ['a-jour', 'À jour', '--good', '✓'],
@@ -505,14 +510,14 @@ const html = `<!doctype html>
   color-scheme: dark;
   --fond: #0d0d0d; --fenetre: #1f1f1e; --laterale: #262624; --carte: #262624; --carte-2: #2f2f2c; --piste: #34342f;
   --ink: #f0efec; --ink-2: #c3c2b7; --muted: #8f8d86; --ligne: #34342f; --anneau: rgba(255,255,255,.08);
-  --serie-1: #3987e5; --serie-2: #d95926; --serie-3: #199e70; --serie-4: #c98500; --serie-5: #d55181; --serie-6: #008300; --serie-7: #9085e9; --serie-8: #898781;
+  --serie-1: #3987e5; --serie-2: #d95926; --serie-3: #199e70; --serie-4: #c98500; --serie-5: #d55181; --serie-6: #008300; --serie-7: #9085e9; --serie-8: #2bb0cf; --serie-9: #898781;
   --good: #0ca30c; --warning: #fab219; --serious: #ec835a; --critical: #d03b3b; --neutre: #6b6a64; --rose: #e2457f; --accent: #ec835a;
 }
 :root[data-theme="light"] {
   color-scheme: light;
   --fond: #e9e8e4; --fenetre: #fcfcfb; --laterale: #f3f2ee; --carte: #ffffff; --carte-2: #f3f2ee; --piste: #e6e5df;
   --ink: #0b0b0b; --ink-2: #52514e; --muted: #6f6d68; --ligne: #e1e0d9; --anneau: rgba(11,11,11,.10);
-  --serie-1: #2a78d6; --serie-2: #eb6834; --serie-3: #1baf7a; --serie-4: #eda100; --serie-5: #e87ba4; --serie-6: #008300; --serie-7: #6250d6; --serie-8: #898781;
+  --serie-1: #2a78d6; --serie-2: #eb6834; --serie-3: #1baf7a; --serie-4: #eda100; --serie-5: #e87ba4; --serie-6: #008300; --serie-7: #6250d6; --serie-8: #0f8fae; --serie-9: #898781;
   --good: #0ca30c; --warning: #d99400; --serious: #d9652f; --critical: #d03b3b; --neutre: #a3a29b; --rose: #d63a73; --accent: #d9652f;
 }
 * { box-sizing: border-box; }
